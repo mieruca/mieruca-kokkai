@@ -1,0 +1,15 @@
+.claude/
+!.claude/settings.json
+
+node_modules/
+dist/
+*.json
+!package.json
+!tsconfig.json
+!playwright.config.ts
+.env
+.env.local
+test-results/
+playwright-report/
+playwright/.cache/
+*.log
