@@ -8,6 +8,7 @@ interface RawMemberData {
     first: string;
     last: string;
   };
+  furigana?: string;
   party: string;
   profileUrl?: string;
   prefecture: string;
@@ -87,35 +88,51 @@ export class DietMemberScraper {
     const rawMembers: ProcessedMemberData[] = [];
 
     try {
-      await page.goto(SCRAPING_CONFIG.URLS.HOUSE_OF_REPRESENTATIVES);
-      await page.waitForTimeout(SCRAPING_CONFIG.TIMEOUTS.PAGE_LOAD);
+      // Scrape all pages (1-10)
+      const allMemberData: RawMemberData[] = [];
+      const totalPages = 10;
 
-      const memberData = await this.extractMembersFromPage(page);
+      for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+        const pageUrl =
+          pageNum === 1
+            ? SCRAPING_CONFIG.URLS.HOUSE_OF_REPRESENTATIVES
+            : `https://www.shugiin.go.jp/internet/itdb_annai.nsf/html/statics/syu/${pageNum}giin.htm`;
 
-      console.log(`Found ${memberData.length} members. Starting furigana extraction...`);
+        console.log(`Scraping page ${pageNum}/${totalPages}: ${pageUrl}`);
+
+        await page.goto(pageUrl);
+        await page.waitForTimeout(SCRAPING_CONFIG.TIMEOUTS.PAGE_LOAD);
+
+        const memberData = await this.extractMembersFromPage(page);
+        allMemberData.push(...memberData);
+
+        console.log(
+          `Page ${pageNum}: Found ${memberData.length} members (total: ${allMemberData.length})`
+        );
+      }
+
+      console.log(
+        `Found ${allMemberData.length} members across ${totalPages} pages. Processing members...`
+      );
 
       // Process and validate members with furigana extraction
       const processedMembers: ProcessedMemberData[] = [];
 
-      for (const [index, member] of memberData.entries()) {
+      for (const [index, member] of allMemberData.entries()) {
         if (!this.validateMemberData(member)) {
           continue;
         }
 
         try {
-          console.log(`Processing member ${index + 1}/${memberData.length}: ${member.name.full}`);
+          console.log(
+            `Processing member ${index + 1}/${allMemberData.length}: ${member.name.full}`
+          );
 
           const electionInfo = this.parseElectionInfo(member.prefecture);
 
-          // Extract furigana from profile page if available
-          let furigana: string | undefined;
-          if (member.profileUrl) {
-            furigana = await this.extractFuriganaFromProfile(page, member.profileUrl);
-          }
-
           const result: ProcessedMemberData = {
             name: member.name.full,
-            ...(furigana && { furigana }),
+            ...(member.furigana && { furigana: member.furigana }),
             party: member.party,
             ...(member.profileUrl && { profileUrl: member.profileUrl }),
             ...electionInfo,
@@ -129,9 +146,7 @@ export class DietMemberScraper {
 
       rawMembers.push(...processedMembers);
 
-      console.log(
-        `Scraped ${rawMembers.length} members with furigana from House of Representatives list`
-      );
+      console.log(`Scraped ${rawMembers.length} members from House of Representatives list`);
 
       if (rawMembers.length === 0) {
         throw new Error('No valid members were scraped. The website structure may have changed.');
@@ -206,27 +221,77 @@ export class DietMemberScraper {
         return districtPatterns.some((pattern) => pattern.test(text));
       }
 
-      // Extract name and profile URL from name cell
+      // Extract name, furigana and profile URL from name cell
       // @ts-ignore
       function extractNameFromCell(nameCell) {
-        if (!nameCell) return { name: '', profileUrl: '' };
+        if (!nameCell) return { name: '', profileUrl: '', furigana: '' };
+
+        let name = '';
+        let furigana = '';
+        let profileUrl = '';
 
         const nameLink = nameCell.querySelector('a');
         if (nameLink) {
-          const name = nameLink.textContent?.trim() || '';
-          let profileUrl = nameLink.getAttribute('href') || '';
+          name = nameLink.textContent?.trim() || '';
+          profileUrl = nameLink.getAttribute('href') || '';
 
           if (profileUrl && !profileUrl.startsWith('http')) {
             profileUrl = buildAbsoluteUrl(profileUrl);
           }
 
-          return { name, profileUrl };
+          // Try to extract furigana from the link element
+          furigana = extractFuriganaFromElement(nameLink);
+        } else {
+          name = nameCell.textContent?.trim() || '';
+          furigana = extractFuriganaFromElement(nameCell);
         }
 
-        return {
-          name: nameCell.textContent?.trim() || '',
-          profileUrl: '',
-        };
+        return { name, profileUrl, furigana };
+      }
+
+      // Extract furigana from HTML element
+      // @ts-ignore
+      function extractFuriganaFromElement(element) {
+        // Check for ruby elements first
+        const ruby = element.querySelector('ruby');
+        if (ruby) {
+          const rt = ruby.querySelector('rt');
+          if (rt) return rt.textContent?.trim() || '';
+        }
+
+        // Check for data attributes containing furigana
+        const yomi = element.dataset?.yomi || element.getAttribute('data-yomi');
+        const furiganaAttr = element.dataset?.furigana || element.getAttribute('data-furigana');
+        const pronunciation =
+          element.dataset?.pronunciation || element.getAttribute('data-pronunciation');
+
+        if (yomi) return yomi.trim();
+        if (furiganaAttr) return furiganaAttr.trim();
+        if (pronunciation) return pronunciation.trim();
+
+        // Check title attributes with reading information
+        const title = element.getAttribute('title');
+        if (title && (title.includes('読み') || title.includes('よみ'))) {
+          return title.trim();
+        }
+
+        // Look for furigana patterns in the text content
+        const text = element.textContent || '';
+
+        // Pattern: Kanji followed by hiragana/katakana in parentheses
+        const furiganaPatterns = [
+          /([一-龯]+)\s*\(([あ-んア-ン\s]+)\)/,
+          /([一-龯]+)\s*（([あ-んア-ン\s]+)）/,
+        ];
+
+        for (const pattern of furiganaPatterns) {
+          const match = text.match(pattern);
+          if (match && match[2]) {
+            return match[2].trim().replace(/　/g, ' '); // Convert full-width spaces to regular spaces
+          }
+        }
+
+        return '';
       }
 
       // Extract party from table cells
@@ -323,7 +388,7 @@ export class DietMemberScraper {
 
         if (cells.length < 3) continue;
 
-        const { name, profileUrl } = extractNameFromCell(cells[0]);
+        const { name, profileUrl, furigana } = extractNameFromCell(cells[0]);
 
         if (!name || isHeaderKeyword(name) || isDuplicateMember(name, seenMembers)) continue;
 
@@ -333,6 +398,7 @@ export class DietMemberScraper {
 
         const member = {
           name: nameParts,
+          furigana: furigana || undefined,
           party,
           profileUrl: profileUrl || undefined,
           prefecture,
