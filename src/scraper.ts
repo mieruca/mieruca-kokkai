@@ -88,9 +88,9 @@ export class DietMemberScraper {
     const rawMembers: ProcessedMemberData[] = [];
 
     try {
-      // Scrape all pages (1-10)
+      // Scrape all pages (1-10) - temporarily limit to 1 for debugging
       const allMemberData: RawMemberData[] = [];
-      const totalPages = 10;
+      const totalPages = 1;
 
       for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
         const pageUrl =
@@ -112,7 +112,7 @@ export class DietMemberScraper {
       }
 
       console.log(
-        `Found ${allMemberData.length} members across ${totalPages} pages. Processing members...`
+        `Found ${allMemberData.length} members across ${totalPages} pages. Starting furigana extraction...`
       );
 
       // Process and validate members with furigana extraction
@@ -125,14 +125,20 @@ export class DietMemberScraper {
 
         try {
           console.log(
-            `Processing member ${index + 1}/${allMemberData.length}: ${member.name.full}`
+            `Processing member ${index + 1}/${allMemberData.length}: ${member.name.full}${member.furigana ? ` (${member.furigana})` : ''}`
           );
 
           const electionInfo = this.parseElectionInfo(member.prefecture);
 
           const result: ProcessedMemberData = {
             name: member.name.full,
-            ...(member.furigana && { furigana: member.furigana }),
+            ...(member.furigana && {
+              furigana: member.furigana
+                .replace(/\n/g, ' ') // Remove line breaks
+                .replace(/　/g, ' ') // Replace full-width spaces with regular spaces
+                .replace(/\s+/g, ' ') // Normalize multiple spaces to single space
+                .trim(), // Remove leading/trailing whitespace
+            }),
             party: member.party,
             ...(member.profileUrl && { profileUrl: member.profileUrl }),
             ...electionInfo,
@@ -146,7 +152,9 @@ export class DietMemberScraper {
 
       rawMembers.push(...processedMembers);
 
-      console.log(`Scraped ${rawMembers.length} members from House of Representatives list`);
+      console.log(
+        `Scraped ${rawMembers.length} members with furigana from House of Representatives list`
+      );
 
       if (rawMembers.length === 0) {
         throw new Error('No valid members were scraped. The website structure may have changed.');
@@ -199,7 +207,18 @@ export class DietMemberScraper {
       // Helper function to check if text is a header keyword
       // @ts-ignore
       function isHeaderKeyword(text) {
-        const headers = ['氏名', '議員氏名', '会派', '選挙区', '政党', '都道府県'];
+        const headers = [
+          '氏名',
+          '議員氏名',
+          'ふりがな',
+          'フリガナ',
+          '読み',
+          'よみ',
+          '会派',
+          '選挙区',
+          '政党',
+          '都道府県',
+        ];
         return headers.includes(text) || text.length < 2;
       }
 
@@ -221,92 +240,62 @@ export class DietMemberScraper {
         return districtPatterns.some((pattern) => pattern.test(text));
       }
 
-      // Extract name, furigana and profile URL from name cell
+      // Extract name and profile URL from name cell
       // @ts-ignore
       function extractNameFromCell(nameCell) {
-        if (!nameCell) return { name: '', profileUrl: '', furigana: '' };
-
-        let name = '';
-        let furigana = '';
-        let profileUrl = '';
+        if (!nameCell) return { name: '', profileUrl: '' };
 
         const nameLink = nameCell.querySelector('a');
         if (nameLink) {
-          name = nameLink.textContent?.trim() || '';
-          profileUrl = nameLink.getAttribute('href') || '';
+          const name = nameLink.textContent?.trim() || '';
+          let profileUrl = nameLink.getAttribute('href') || '';
 
           if (profileUrl && !profileUrl.startsWith('http')) {
             profileUrl = buildAbsoluteUrl(profileUrl);
           }
 
-          // Try to extract furigana from the link element
-          furigana = extractFuriganaFromElement(nameLink);
-        } else {
-          name = nameCell.textContent?.trim() || '';
-          furigana = extractFuriganaFromElement(nameCell);
+          return { name, profileUrl };
         }
 
-        return { name, profileUrl, furigana };
+        return {
+          name: nameCell.textContent?.trim() || '',
+          profileUrl: '',
+        };
       }
 
-      // Extract furigana from HTML element
+      // Extract furigana from the second column (index 1)
       // @ts-ignore
-      function extractFuriganaFromElement(element) {
-        // Check for ruby elements first
-        const ruby = element.querySelector('ruby');
-        if (ruby) {
-          const rt = ruby.querySelector('rt');
-          if (rt) return rt.textContent?.trim() || '';
-        }
+      function extractFuriganaFromCells(cells) {
+        if (cells.length < 2) return '';
 
-        // Check for data attributes containing furigana
-        const yomi = element.dataset?.yomi || element.getAttribute('data-yomi');
-        const furiganaAttr = element.dataset?.furigana || element.getAttribute('data-furigana');
-        const pronunciation =
-          element.dataset?.pronunciation || element.getAttribute('data-pronunciation');
+        const furiganaCell = cells[1];
+        if (!furiganaCell) return '';
 
-        if (yomi) return yomi.trim();
-        if (furiganaAttr) return furiganaAttr.trim();
-        if (pronunciation) return pronunciation.trim();
+        let furigana = furiganaCell.textContent?.trim() || '';
 
-        // Check title attributes with reading information
-        const title = element.getAttribute('title');
-        if (title && (title.includes('読み') || title.includes('よみ'))) {
-          return title.trim();
-        }
+        // Skip if it's a header or empty
+        if (!furigana || isHeaderKeyword(furigana)) return '';
 
-        // Look for furigana patterns in the text content
-        const text = element.textContent || '';
+        // Remove line breaks and normalize whitespace
+        furigana = furigana.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
 
-        // Pattern: Kanji followed by hiragana/katakana in parentheses
-        const furiganaPatterns = [
-          /([一-龯]+)\s*\(([あ-んア-ン\s]+)\)/,
-          /([一-龯]+)\s*（([あ-んア-ン\s]+)）/,
-        ];
-
-        for (const pattern of furiganaPatterns) {
-          const match = text.match(pattern);
-          if (match && match[2]) {
-            return match[2].trim().replace(/　/g, ' '); // Convert full-width spaces to regular spaces
-          }
-        }
-
-        return '';
+        console.log(`Extracted furigana: "${furigana}"`);
+        return furigana;
       }
 
-      // Extract party from table cells
+      // Extract party from table cells (now in column 3, index 2)
       // @ts-ignore
       function extractPartyFromCells(cells) {
-        // セル2（インデックス1）を最初にチェック
-        if (cells[1]) {
-          const cellText = cells[1].textContent?.trim() || '';
+        // セル3（インデックス2）を最初にチェック - ふりがなが2列目なので政党は3列目
+        if (cells[2]) {
+          const cellText = cells[2].textContent?.trim() || '';
           if (cellText && !isHeaderKeyword(cellText) && isPartyKeyword(cellText)) {
             return cellText;
           }
         }
 
-        // セル3以降で政党キーワードを含むものを探す
-        for (let i = 2; i < cells.length; i++) {
+        // セル4以降で政党キーワードを含むものを探す
+        for (let i = 3; i < cells.length; i++) {
           const cell = cells[i];
           if (!cell) continue;
 
@@ -316,22 +305,22 @@ export class DietMemberScraper {
           }
         }
 
-        // フォールバック：セル2の内容（ヘッダーでない場合）
-        if (cells[1]) {
-          const secondCellText = cells[1].textContent?.trim() || '';
-          if (secondCellText && !isHeaderKeyword(secondCellText)) {
-            return secondCellText;
+        // フォールバック：セル3の内容（ヘッダーでない場合）
+        if (cells[2]) {
+          const thirdCellText = cells[2].textContent?.trim() || '';
+          if (thirdCellText && !isHeaderKeyword(thirdCellText)) {
+            return thirdCellText;
           }
         }
 
         return '不明';
       }
 
-      // Extract electoral district from table cells
+      // Extract electoral district from table cells (now in column 4, index 3)
       // @ts-ignore
       function extractElectoralDistrictFromCells(cells) {
-        // 選挙区パターンに一致するセルを探す
-        for (let i = 1; i < cells.length; i++) {
+        // 選挙区パターンに一致するセルを探す（2列目がふりがななので3列目以降から）
+        for (let i = 3; i < cells.length; i++) {
           const cell = cells[i];
           if (!cell) continue;
 
@@ -342,7 +331,7 @@ export class DietMemberScraper {
         }
 
         // フォールバック：政党以外の最後の有意なセル
-        for (let i = cells.length - 1; i >= 1; i--) {
+        for (let i = cells.length - 1; i >= 3; i--) {
           const cell = cells[i];
           if (!cell) continue;
 
@@ -388,7 +377,8 @@ export class DietMemberScraper {
 
         if (cells.length < 3) continue;
 
-        const { name, profileUrl, furigana } = extractNameFromCell(cells[0]);
+        const { name, profileUrl } = extractNameFromCell(cells[0]);
+        const furigana = extractFuriganaFromCells(cells);
 
         if (!name || isHeaderKeyword(name) || isDuplicateMember(name, seenMembers)) continue;
 
