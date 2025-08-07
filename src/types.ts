@@ -2,7 +2,6 @@ export interface DietMember {
   name: string;
   furigana?: string;
   party: string;
-  prefecture: string;
   district?: string;
   chamber: 'house-of-representatives' | 'house-of-councillors';
   profileUrl?: string;
