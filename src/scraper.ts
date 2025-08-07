@@ -460,7 +460,8 @@ export class DietMemberScraper {
         return undefined;
       });
 
-      return furigana || undefined;
+      // Normalize spacing: convert full-width spaces to regular spaces
+      return furigana ? furigana.replace(/　/g, ' ') : undefined;
     } catch (error) {
       console.warn(`Failed to extract furigana from ${profileUrl}:`, error);
       return undefined;
