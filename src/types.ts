@@ -3,12 +3,17 @@ export interface DietMember {
   furigana?: string;
   party: string;
   district?: string;
-  chamber: 'house-of-representatives' | 'house-of-councillors';
   profileUrl?: string;
   imageUrl?: string;
   email?: string;
   website?: string;
   electionCount?: number;
+  election: {
+    system: 'single-seat' | 'proportional-representation';
+    prefecture?: string;
+    number?: string | undefined;
+    area?: string;
+  };
 }
 
 export interface ScrapeResult {

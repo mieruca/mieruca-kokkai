@@ -9,7 +9,6 @@ interface RawMemberData {
     last: string;
   };
   party: string;
-  chamber: 'house-of-representatives';
   profileUrl?: string;
   prefecture: string;
 }
@@ -17,13 +16,14 @@ interface RawMemberData {
 // Processed member data with election info
 interface ProcessedMemberData {
   name: string;
+  furigana?: string;
   party: string;
-  chamber: 'house-of-representatives';
   profileUrl?: string;
   election: {
     system: 'single-seat' | 'proportional-representation';
     prefecture?: string;
     number?: string | undefined;
+    area?: string;
   };
   electionCount?: number;
 }
@@ -92,34 +92,46 @@ export class DietMemberScraper {
 
       const memberData = await this.extractMembersFromPage(page);
 
-      // Process and validate members
-      const processedMembers = memberData
-        .filter((member: RawMemberData) => this.validateMemberData(member))
-        .map((member: RawMemberData) => {
-          try {
-            const electionInfo = this.parseElectionInfo(member.prefecture);
+      console.log(`Found ${memberData.length} members. Starting furigana extraction...`);
 
-            const result = {
-              name: member.name.full,
-              party: member.party,
-              chamber: member.chamber,
-              profileUrl: member.profileUrl,
-              ...electionInfo,
-            } as ProcessedMemberData;
+      // Process and validate members with furigana extraction
+      const processedMembers: ProcessedMemberData[] = [];
 
-            return result;
-          } catch (error) {
-            console.warn(`Failed to process member: ${member.name?.full}`, error);
-            return null;
+      for (const [index, member] of memberData.entries()) {
+        if (!this.validateMemberData(member)) {
+          continue;
+        }
+
+        try {
+          console.log(`Processing member ${index + 1}/${memberData.length}: ${member.name.full}`);
+
+          const electionInfo = this.parseElectionInfo(member.prefecture);
+
+          // Extract furigana from profile page if available
+          let furigana: string | undefined;
+          if (member.profileUrl) {
+            furigana = await this.extractFuriganaFromProfile(page, member.profileUrl);
           }
-        })
-        .filter(
-          (member: ProcessedMemberData | null): member is ProcessedMemberData => member !== null
-        );
+
+          const result: ProcessedMemberData = {
+            name: member.name.full,
+            ...(furigana && { furigana }),
+            party: member.party,
+            ...(member.profileUrl && { profileUrl: member.profileUrl }),
+            ...electionInfo,
+          };
+
+          processedMembers.push(result);
+        } catch (error) {
+          console.warn(`Failed to process member: ${member.name?.full}`, error);
+        }
+      }
 
       rawMembers.push(...processedMembers);
 
-      console.log(`Scraped ${rawMembers.length} members from House of Representatives list`);
+      console.log(
+        `Scraped ${rawMembers.length} members with furigana from House of Representatives list`
+      );
 
       if (rawMembers.length === 0) {
         throw new Error('No valid members were scraped. The website structure may have changed.');
@@ -322,7 +334,6 @@ export class DietMemberScraper {
         const member = {
           name: nameParts,
           party,
-          chamber: 'house-of-representatives',
           profileUrl: profileUrl || undefined,
           prefecture,
         };
@@ -360,17 +371,100 @@ export class DietMemberScraper {
       return false;
     }
 
-    // Check chamber
-    if (member.chamber !== 'house-of-representatives') {
-      return false;
-    }
-
     // Check prefecture
     if (!member.prefecture || typeof member.prefecture !== 'string') {
       return false;
     }
 
     return true;
+  }
+
+  /**
+   * Extract furigana (reading) from member profile page
+   */
+  private async extractFuriganaFromProfile(
+    page: Page,
+    profileUrl: string
+  ): Promise<string | undefined> {
+    if (!profileUrl) return undefined;
+
+    try {
+      await page.goto(profileUrl, { waitUntil: 'networkidle' });
+      await page.waitForTimeout(1000);
+
+      const furigana = await page.evaluate(() => {
+        // Check for ruby elements first
+        const ruby = document.querySelector('ruby');
+        if (ruby) {
+          const rt = ruby.querySelector('rt');
+          if (rt) return rt.textContent?.trim();
+        }
+
+        // Check for data attributes containing furigana
+        const dataElement = document.querySelector(
+          '[data-yomi], [data-furigana], [data-pronunciation]'
+        );
+        if (dataElement) {
+          const element = dataElement as HTMLElement;
+          return (
+            element.dataset['yomi'] ||
+            element.dataset['furigana'] ||
+            element.dataset['pronunciation']
+          )?.trim();
+        }
+
+        // Check title attributes with reading information
+        const titleElement = document.querySelector('[title*="読み"], [title*="よみ"]');
+        if (titleElement) {
+          return titleElement.getAttribute('title')?.trim();
+        }
+
+        // Look for furigana in common class names
+        const classElement = document.querySelector('.furigana, .yomi, .pronunciation, .ruby-text');
+        if (classElement) {
+          return classElement.textContent?.trim();
+        }
+
+        // Try to find furigana patterns in the page content
+        // Look for parentheses with hiragana/katakana following kanji names
+        const bodyText = document.body.textContent || '';
+        const namePatterns = [
+          /([一-龯]+)\s*\(([あ-んア-ン\s]+)\)/g, // Kanji followed by hiragana/katakana in parentheses
+          /([一-龯]+)\s*（([あ-んア-ン\s]+)）/g, // Full-width parentheses
+        ];
+
+        for (const pattern of namePatterns) {
+          const matches = [...bodyText.matchAll(pattern)];
+          if (matches.length > 0) {
+            return matches[0]?.[2]?.trim(); // Return the furigana part
+          }
+        }
+
+        // Check for specific table structures with furigana
+        const tables = Array.from(document.querySelectorAll('table'));
+        for (const table of tables) {
+          const rows = Array.from(table.querySelectorAll('tr'));
+          for (const row of rows) {
+            const cells = Array.from(row.querySelectorAll('td, th'));
+            for (const cell of cells) {
+              const text = cell.textContent?.trim() || '';
+              // Look for patterns like "氏名(ふりがな)" or similar
+              const cellFurigana = text.match(/\(([あ-んア-ン\s]+)\)/);
+              if (cellFurigana?.[1]) {
+                return cellFurigana[1].trim();
+              }
+            }
+          }
+        }
+
+        return undefined;
+      });
+
+      return furigana || undefined;
+    } catch (error) {
+      console.warn(`Failed to extract furigana from ${profileUrl}:`, error);
+      return undefined;
+    }
   }
 
   /**
