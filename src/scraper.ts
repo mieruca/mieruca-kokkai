@@ -1,5 +1,5 @@
 import { type Browser, chromium, type Page } from 'playwright';
-import type { ScrapeResult } from './types';
+import type { DietMember, ScrapeResult } from './types';
 
 // Raw member data from table extraction
 interface RawMemberData {
@@ -58,8 +58,10 @@ export class DietMemberScraper {
 
     try {
       console.log('Scraping House of Representatives list...');
-      await page.goto(SCRAPING_CONFIG.URLS.HOUSE_OF_REPRESENTATIVES);
-      await page.waitForTimeout(SCRAPING_CONFIG.TIMEOUTS.PAGE_LOAD);
+      await page.goto(SCRAPING_CONFIG.URLS.HOUSE_OF_REPRESENTATIVES, {
+        waitUntil: 'domcontentloaded',
+      });
+      await page.waitForSelector('table', { timeout: SCRAPING_CONFIG.TIMEOUTS.PAGE_LOAD });
 
       const rawMemberData = await this.extractMembersFromPage(page);
       console.log(`Found ${rawMemberData.length} raw members`);
