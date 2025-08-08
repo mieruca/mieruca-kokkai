@@ -10,7 +10,7 @@ async function main() {
     await scraper.initialize();
 
     console.log('Starting to scrape House of Representatives...');
-    const result = await scraper.scrapeSimpleExample();
+    const result = await scraper.scrapeHouseOfRepresentativesList();
 
     console.log(`Scraped ${result.members.length} members`);
 

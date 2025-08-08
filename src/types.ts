@@ -2,11 +2,7 @@ export interface DietMember {
   name: string;
   furigana?: string;
   party: string;
-  district?: string;
   profileUrl?: string;
-  imageUrl?: string;
-  email?: string;
-  website?: string;
   electionCount?: number;
   election: {
     system: 'single-seat' | 'proportional-representation';
