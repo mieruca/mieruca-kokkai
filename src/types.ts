@@ -3,7 +3,7 @@ export interface DietMember {
   furigana?: string;
   party: string;
   profileUrl?: string;
-  electionCount?: number;
+  electionCount?: number | { house: number; senate?: number };
   election: {
     system: 'single-seat' | 'proportional-representation';
     prefecture?: string;
