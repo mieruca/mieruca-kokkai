@@ -108,7 +108,7 @@ export class DietMemberScraper {
       const seenMembers = new Set();
       const rows = Array.from(document.querySelectorAll('table tr'));
 
-      function isHeaderKeyword(text) {
+      function isHeaderKeyword(text: string): boolean {
         const headers = [
           '氏名',
           '議員氏名',
@@ -124,12 +124,12 @@ export class DietMemberScraper {
         return headers.includes(text) || text.length < 2;
       }
 
-      function isPartyKeyword(text) {
+      function isPartyKeyword(text: string): boolean {
         const parties = ['党', '会', '民主', '自民', '公明', '維新', '共産', '立憲', '国民'];
         return parties.some((keyword) => text.includes(keyword));
       }
 
-      function buildAbsoluteUrl(relativeUrl) {
+      function buildAbsoluteUrl(relativeUrl: string): string {
         const baseUrl = 'https://www.shugiin.go.jp';
         if (relativeUrl.startsWith('../../../../')) {
           return relativeUrl.replace('../../../../', `${baseUrl}/internet/`);
@@ -159,7 +159,7 @@ export class DietMemberScraper {
         seenMembers.add(cleanName);
 
         const profileUrl = link?.getAttribute('href')
-          ? buildAbsoluteUrl(link.getAttribute('href'))
+          ? buildAbsoluteUrl(link.getAttribute('href') || '')
           : '';
 
         const furigana = cells[1] ? cells[1].textContent?.trim() : '';
@@ -201,7 +201,7 @@ export class DietMemberScraper {
           if (text) {
             // Check for pattern like "1（参2）", "5（参1）" - House + (Senate)
             const senateMatch = text.match(/^(\d+)（参(\d+)）$/);
-            if (senateMatch) {
+            if (senateMatch?.[1] && senateMatch[2]) {
               const houseCount = parseInt(senateMatch[1]);
               const senateCount = parseInt(senateMatch[2]);
               electionCount = { house: houseCount, senate: senateCount };
@@ -251,18 +251,29 @@ export class DietMemberScraper {
         }
 
         const nameParts = cleanName.split(/\s+/);
-        members.push({
+        const memberData: RawMemberData = {
           name: {
             full: cleanName,
             last: nameParts[0] || '',
             first: nameParts.slice(1).join(' ') || '',
           },
-          furigana: furigana && !isHeaderKeyword(furigana) ? furigana : undefined,
           party,
-          profileUrl: profileUrl || undefined,
           prefecture,
-          electionCount: electionCount || undefined,
-        });
+        };
+
+        if (furigana && !isHeaderKeyword(furigana)) {
+          memberData.furigana = furigana;
+        }
+
+        if (profileUrl) {
+          memberData.profileUrl = profileUrl;
+        }
+
+        if (electionCount) {
+          memberData.electionCount = electionCount;
+        }
+
+        members.push(memberData);
       }
 
       return members;
