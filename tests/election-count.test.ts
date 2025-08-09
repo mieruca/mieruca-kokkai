@@ -1,11 +1,11 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Election Count Parsing', () => {
   // Helper function to simulate the election count extraction logic
   function parseElectionCount(cellTexts: string[]): { house: number; senate?: number } | undefined {
     for (const text of cellTexts) {
       if (!text) continue;
-      
+
       // Check for pattern like "1（参2）", "5（参1）" - House + (Senate)
       const senateMatch = text.match(/^(\d+)（参(\d+)）$/);
       if (senateMatch) {
@@ -13,11 +13,12 @@ test.describe('Election Count Parsing', () => {
         const senateCount = parseInt(senateMatch[2] as string);
         return { house: houseCount, senate: senateCount };
       }
-      
+
       // Check for pure number (House only)
       if (/^\d+$/.test(text)) {
         const num = parseInt(text);
-        if (num >= 1 && num <= 25) { // Range constraint: Japanese Diet election counts are typically 1-25 based on historical data
+        if (num >= 1 && num <= 25) {
+          // Range constraint: Japanese Diet election counts are typically 1-25 based on historical data
           return { house: num };
         }
       }
@@ -75,17 +76,17 @@ test.describe('Election Count Parsing', () => {
 
   test('should handle mixed valid and invalid data', () => {
     const testCases = [
-      { 
-        input: ['abc', '50', '5', 'def'], 
-        expected: { house: 5 } // Should find the valid one
+      {
+        input: ['abc', '50', '5', 'def'],
+        expected: { house: 5 }, // Should find the valid one
       },
-      { 
-        input: ['invalid', '3（参2）', '100'], 
-        expected: { house: 3, senate: 2 } // Should find the House+Senate pattern
+      {
+        input: ['invalid', '3（参2）', '100'],
+        expected: { house: 3, senate: 2 }, // Should find the House+Senate pattern
       },
-      { 
-        input: ['0', '26', 'abc'], 
-        expected: undefined // All invalid
+      {
+        input: ['0', '26', 'abc'],
+        expected: undefined, // All invalid
       },
     ];
 
@@ -115,11 +116,7 @@ test.describe('Election Count Parsing', () => {
   });
 
   test('should validate Senate pattern regex correctly', () => {
-    const validPatterns = [
-      '1（参2）',
-      '10（参5）',
-      '25（参25）',
-    ];
+    const validPatterns = ['1（参2）', '10（参5）', '25（参25）'];
 
     const invalidPatterns = [
       '1 （参2）', // Space before parenthesis

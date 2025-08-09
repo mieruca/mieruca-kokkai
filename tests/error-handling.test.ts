@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { DietMemberScraper } from '../src/scraper';
 
 test.describe('Error Handling and Edge Cases', () => {
@@ -15,10 +15,10 @@ test.describe('Error Handling and Edge Cases', () => {
   test('should handle empty table gracefully', async () => {
     // Initialize browser first
     await scraper.initialize();
-    
+
     // Test with a mock page that has an empty table
-    const page = await scraper['browser']!.newPage();
-    
+    const page = await scraper.newPage();
+
     await page.setContent(`
       <html>
         <body>
@@ -41,8 +41,8 @@ test.describe('Error Handling and Edge Cases', () => {
 
   test('should handle missing table elements', async () => {
     await scraper.initialize();
-    const page = await scraper['browser']!.newPage();
-    
+    const page = await scraper.newPage();
+
     await page.setContent(`
       <html>
         <body>
@@ -62,8 +62,8 @@ test.describe('Error Handling and Edge Cases', () => {
 
   test('should handle malformed HTML gracefully', async () => {
     await scraper.initialize();
-    const page = await scraper['browser']!.newPage();
-    
+    const page = await scraper.newPage();
+
     await page.setContent(`
       <html>
         <body>
@@ -85,11 +85,12 @@ test.describe('Error Handling and Edge Cases', () => {
     await page.close();
   });
 
-  test('should handle network timeouts appropriately', async ({}, testInfo) => {
+  test('should handle network timeouts appropriately', async (_args, testInfo) => {
+    void _args;
     testInfo.setTimeout(10000);
     const testScraper = new DietMemberScraper();
     await testScraper.initialize();
-    const page = await testScraper['browser']!.newPage();
+    const page = await testScraper.newPage();
 
     // Set a very short timeout to simulate timeout scenario
     page.setDefaultTimeout(1);
@@ -108,8 +109,8 @@ test.describe('Error Handling and Edge Cases', () => {
 
   test('should handle invalid characters in member data', async () => {
     await scraper.initialize();
-    const page = await scraper['browser']!.newPage();
-    
+    const page = await scraper.newPage();
+
     await page.setContent(`
       <html>
         <body>
@@ -130,7 +131,7 @@ test.describe('Error Handling and Edge Cases', () => {
     const cells = await page.evaluate(() => {
       const row = document.querySelector('tr');
       const cells = row?.querySelectorAll('td');
-      return cells ? Array.from(cells).map(cell => cell.textContent || '') : [];
+      return cells ? Array.from(cells).map((cell) => cell.textContent || '') : [];
     });
 
     expect(cells).toBeDefined();
@@ -138,15 +139,15 @@ test.describe('Error Handling and Edge Cases', () => {
     expect(cells[0]).toBe('山田　太郎');
     expect(cells[1]).toBe('🎌 Invalid Party Name with Emoji');
     expect(cells[2]).toBe('東京1');
-    
+
     await page.close();
   });
 
   test('should handle extremely long member names', async () => {
     await scraper.initialize();
     const longName = 'あ'.repeat(1000); // 1000 character name
-    const page = await scraper['browser']!.newPage();
-    
+    const page = await scraper.newPage();
+
     await page.setContent(`
       <html>
         <body>
@@ -168,14 +169,14 @@ test.describe('Error Handling and Edge Cases', () => {
 
     expect(name.length).toBe(1000);
     expect(name).toBe(longName);
-    
+
     await page.close();
   });
 
   test('should handle missing furigana gracefully', async () => {
     await scraper.initialize();
-    const page = await scraper['browser']!.newPage();
-    
+    const page = await scraper.newPage();
+
     // Simulate a profile page without furigana
     await page.setContent(`
       <html>
@@ -197,34 +198,34 @@ test.describe('Error Handling and Edge Cases', () => {
         () => document.querySelector('[title*="読み"]')?.getAttribute('title'),
       ];
 
-      return strategies.map(strategy => strategy() || null);
+      return strategies.map((strategy) => strategy() || null);
     });
 
     // All strategies should return null for this page
-    expect(furiganaTests.every(result => result === null)).toBe(true);
-    
+    expect(furiganaTests.every((result) => result === null)).toBe(true);
+
     await page.close();
   });
 
   test('should handle browser crash gracefully', async () => {
     const testScraper = new DietMemberScraper();
     await testScraper.initialize();
-    
+
     // Close browser to simulate crash
-    await testScraper['browser']!.close();
-    
+    await testScraper.forceCloseBrowserForTest();
+
     // Subsequent operations should handle the closed browser
     await expect(testScraper.close()).resolves.not.toThrow();
   });
 
   test('should handle concurrent scraping requests', async () => {
     const scrapers = Array.from({ length: 3 }, () => new DietMemberScraper());
-    
+
     try {
       // This should not cause conflicts or errors
       const promises = scrapers.map(async (scraper, index) => {
         await scraper.initialize();
-        const page = await scraper['browser']!.newPage();
+        const page = await scraper.newPage();
         await page.setContent(`
           <html><body>
             <table>
@@ -232,24 +233,24 @@ test.describe('Error Handling and Edge Cases', () => {
             </table>
           </body></html>
         `);
-        
+
         const result = await page.evaluate(() => {
           const cells = document.querySelectorAll('td');
-          return Array.from(cells).map(cell => cell.textContent);
+          return Array.from(cells).map((cell) => cell.textContent);
         });
-        
+
         await page.close();
         return result;
       });
-      
+
       const results = await Promise.all(promises);
       expect(results).toHaveLength(3);
-      
+
       for (let i = 0; i < results.length; i++) {
         expect(results[i]).toEqual([`Member ${i}`, `Party ${i}`, `District ${i}`]);
       }
     } finally {
-      await Promise.all(scrapers.map(scraper => scraper.close()));
+      await Promise.all(scrapers.map((scraper) => scraper.close()));
     }
   });
 
@@ -257,7 +258,7 @@ test.describe('Error Handling and Edge Cases', () => {
     // Test the edge cases for election count validation
     const testCases = [
       { input: '0', shouldBeValid: false }, // Too low
-      { input: '26', shouldBeValid: false }, // Too high  
+      { input: '26', shouldBeValid: false }, // Too high
       { input: '-1', shouldBeValid: false }, // Negative
       { input: '1.5', shouldBeValid: false }, // Decimal
       { input: '1e2', shouldBeValid: false }, // Scientific notation
@@ -274,7 +275,7 @@ test.describe('Error Handling and Edge Cases', () => {
       const inRange = num >= 1 && num <= 25;
       const noLeadingZero = !testCase.input.startsWith('0') || testCase.input === '0';
       const shouldBeValid = isValid && inRange && noLeadingZero;
-      
+
       expect(shouldBeValid).toBe(testCase.shouldBeValid);
     }
   });
@@ -290,8 +291,8 @@ test.describe('Error Handling and Edge Cases', () => {
     ];
 
     await scraper.initialize();
-    const page = await scraper['browser']!.newPage();
-    
+    const page = await scraper.newPage();
+
     for (const partyName of specialPartyNames) {
       await page.setContent(`
         <html>
@@ -310,7 +311,7 @@ test.describe('Error Handling and Edge Cases', () => {
 
       expect(extractedParty).toBe(partyName);
     }
-    
+
     await page.close();
   });
 });

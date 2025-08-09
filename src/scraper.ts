@@ -33,6 +33,26 @@ export class DietMemberScraper {
   }
 
   /**
+   * Create a new Playwright page using the internal browser instance.
+   * Throws if initialize() hasn't been called.
+   */
+  public async newPage(): Promise<Page> {
+    if (!this.browser) {
+      throw new Error('Browser not initialized. Call initialize() first.');
+    }
+    return this.browser.newPage();
+  }
+
+  /**
+   * For tests: force-close the underlying browser without changing public API.
+   */
+  public async forceCloseBrowserForTest(): Promise<void> {
+    if (this.browser) {
+      await this.browser.close();
+    }
+  }
+
+  /**
    * Main method to scrape House of Representatives members
    */
   async scrapeHouseOfRepresentativesList(): Promise<ScrapeResult> {

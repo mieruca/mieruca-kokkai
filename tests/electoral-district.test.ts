@@ -1,11 +1,18 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { PREFECTURES } from '../src/constants';
 
 const PROPORTIONAL_BLOCKS = [
-  '比例北海道ブロック', '比例東北ブロック', '比例北関東ブロック',
-  '比例南関東ブロック', '比例東京ブロック', '比例北陸信越ブロック',
-  '比例東海ブロック', '比例近畿ブロック', '比例中国ブロック',
-  '比例四国ブロック', '比例九州ブロック'
+  '比例北海道ブロック',
+  '比例東北ブロック',
+  '比例北関東ブロック',
+  '比例南関東ブロック',
+  '比例東京ブロック',
+  '比例北陸信越ブロック',
+  '比例東海ブロック',
+  '比例近畿ブロック',
+  '比例中国ブロック',
+  '比例四国ブロック',
+  '比例九州ブロック',
 ];
 
 test.describe('Electoral District Parsing', () => {
@@ -19,12 +26,12 @@ test.describe('Electoral District Parsing', () => {
     for (const raw of cellTexts) {
       const text = (raw || '').replace(/\s+/g, '').trim();
       if (!text) continue;
-      
+
       // Check for prefecture + number pattern (single-seat constituencies)
       for (const prefecture of PREFECTURES) {
         if (text.startsWith(prefecture)) {
           const numberPart = text.substring(prefecture.length);
-          
+
           // Check if it's followed by a number
           if (/^\d+$/.test(numberPart)) {
             return {
@@ -35,10 +42,10 @@ test.describe('Electoral District Parsing', () => {
           }
         }
       }
-      
+
       // Check for proportional representation blocks
       const proportionalBlocks = PROPORTIONAL_BLOCKS;
-      
+
       for (const block of proportionalBlocks) {
         if (text.includes(block) || text === block) {
           return {
@@ -47,13 +54,22 @@ test.describe('Electoral District Parsing', () => {
           };
         }
       }
-      
+
       // Simplified block names
       const simpleBlocks = [
-        '北海道', '東北', '北関東', '南関東', '東京', 
-        '北陸信越', '東海', '近畿', '中国', '四国', '九州'
+        '北海道',
+        '東北',
+        '北関東',
+        '南関東',
+        '東京',
+        '北陸信越',
+        '東海',
+        '近畿',
+        '中国',
+        '四国',
+        '九州',
       ];
-      
+
       for (const block of simpleBlocks) {
         if (text === `比例${block}` || text === block) {
           return {
@@ -63,7 +79,7 @@ test.describe('Electoral District Parsing', () => {
         }
       }
     }
-    
+
     // Default fallback
     return {
       system: 'single-seat',
@@ -79,7 +95,7 @@ test.describe('Electoral District Parsing', () => {
           system: 'single-seat',
           prefecture: '北海道',
           number: '1',
-        }
+        },
       },
       {
         input: ['東京1'],
@@ -87,7 +103,7 @@ test.describe('Electoral District Parsing', () => {
           system: 'single-seat',
           prefecture: '東京',
           number: '1',
-        }
+        },
       },
       {
         input: ['大阪14'],
@@ -95,7 +111,7 @@ test.describe('Electoral District Parsing', () => {
           system: 'single-seat',
           prefecture: '大阪',
           number: '14',
-        }
+        },
       },
       {
         input: ['岡山1'],
@@ -103,7 +119,7 @@ test.describe('Electoral District Parsing', () => {
           system: 'single-seat',
           prefecture: '岡山',
           number: '1',
-        }
+        },
       },
       {
         input: ['沖縄1'],
@@ -111,8 +127,8 @@ test.describe('Electoral District Parsing', () => {
           system: 'single-seat',
           prefecture: '沖縄',
           number: '1',
-        }
-      }
+        },
+      },
     ];
 
     for (const testCase of testCases) {
@@ -128,21 +144,21 @@ test.describe('Electoral District Parsing', () => {
         expected: {
           system: 'proportional-representation',
           area: '比例北海道ブロック',
-        }
+        },
       },
       {
         input: ['比例東京ブロック'],
         expected: {
           system: 'proportional-representation',
           area: '比例東京ブロック',
-        }
+        },
       },
       {
         input: ['比例九州ブロック'],
         expected: {
           system: 'proportional-representation',
           area: '比例九州ブロック',
-        }
+        },
       },
     ];
 
@@ -159,21 +175,21 @@ test.describe('Electoral District Parsing', () => {
         expected: {
           system: 'proportional-representation',
           area: '比例北海道ブロック',
-        }
+        },
       },
       {
         input: ['東京'],
         expected: {
           system: 'proportional-representation',
           area: '比例東京ブロック',
-        }
+        },
       },
       {
         input: ['九州'],
         expected: {
           system: 'proportional-representation',
           area: '比例九州ブロック',
-        }
+        },
       },
     ];
 
@@ -197,7 +213,7 @@ test.describe('Electoral District Parsing', () => {
     for (let i = 0; i < PREFECTURES.length; i++) {
       const prefecture = PREFECTURES[i];
       const testInput = [`${prefecture}1`];
-      
+
       const result = parseElectoralDistrict(testInput);
       expect(result).toEqual({
         system: 'single-seat',
@@ -246,7 +262,7 @@ test.describe('Electoral District Parsing', () => {
           system: 'single-seat',
           prefecture: '東京',
           number: '25',
-        }
+        },
       },
       {
         input: ['神奈川18'],
@@ -254,7 +270,7 @@ test.describe('Electoral District Parsing', () => {
           system: 'single-seat',
           prefecture: '神奈川',
           number: '18',
-        }
+        },
       },
     ];
 
@@ -272,14 +288,14 @@ test.describe('Electoral District Parsing', () => {
           system: 'single-seat',
           prefecture: '岡山',
           number: '1',
-        }
+        },
       },
       {
         input: ['abc', '', '比例九州ブロック'],
         expected: {
           system: 'proportional-representation',
           area: '比例九州ブロック',
-        }
+        },
       },
     ];
 

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { PREFECTURES, SCRAPING_CONFIG } from '../src/constants';
 
 test.describe('Constants', () => {
@@ -42,7 +42,7 @@ test.describe('Constants', () => {
 
   test('SCRAPING_CONFIG URLs should be valid', () => {
     const url = SCRAPING_CONFIG.URLS.HOUSE_OF_REPRESENTATIVES;
-    
+
     expect(url).toMatch(/^https?:\/\//);
     expect(url).toContain('shugiin.go.jp');
     expect(url).toContain('1giin.htm');
