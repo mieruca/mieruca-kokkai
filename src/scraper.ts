@@ -1,4 +1,5 @@
 import { type Browser, chromium, type Page } from 'playwright';
+import { PREFECTURES, SCRAPING_CONFIG } from './constants';
 import type { DietMember, ScrapeResult } from './types';
 
 // Raw member data from table extraction
@@ -12,18 +13,8 @@ interface RawMemberData {
   party: string;
   profileUrl?: string;
   prefecture: string;
+  electionCount?: number | { house: number; senate?: number };
 }
-
-// Configuration constants
-const SCRAPING_CONFIG = {
-  URLS: {
-    HOUSE_OF_REPRESENTATIVES:
-      'https://www.shugiin.go.jp/internet/itdb_annai.nsf/html/statics/syu/1giin.htm',
-  },
-  TIMEOUTS: {
-    PAGE_LOAD: 3000,
-  },
-} as const;
 
 export class DietMemberScraper {
   private browser: Browser | null = null;
@@ -83,6 +74,7 @@ export class DietMemberScraper {
             ...electionInfo,
             ...(member.furigana && { furigana: this.normalizeFurigana(member.furigana) }),
             ...(member.profileUrl && { profileUrl: member.profileUrl }),
+            ...(member.electionCount && { electionCount: member.electionCount }),
           };
 
           processedMembers.push(processedMember);
@@ -111,7 +103,7 @@ export class DietMemberScraper {
   }
 
   private async extractMembersFromPage(page: Page): Promise<RawMemberData[]> {
-    return page.evaluate(() => {
+    return page.evaluate((prefectures) => {
       const members = [];
       const seenMembers = new Set();
       const rows = Array.from(document.querySelectorAll('table tr'));
@@ -135,16 +127,6 @@ export class DietMemberScraper {
       function isPartyKeyword(text) {
         const parties = ['党', '会', '民主', '自民', '公明', '維新', '共産', '立憲', '国民'];
         return parties.some((keyword) => text.includes(keyword));
-      }
-
-      function isElectoralDistrictKeyword(text) {
-        return (
-          /^(北海道|青森|岩手|宮城|秋田|山形|福島|茨城|栃木|群馬|埼玉|千葉|東京|神奈川|新潟|富山|石川|福井|山梨|長野|岐阜|静岡|愛知|三重|滋賀|京都|大阪|兵庫|奈良|和歌山|鳥取|島根|岡山|広島|山口|徳島|香川|愛媛|高知|福岡|佐賀|長崎|熊本|大分|宮崎|鹿児島|沖縄)\d*$/.test(
-            text
-          ) ||
-          /^（比）(北海道|東北|北関東|南関東|東京|北陸信越|東海|近畿|中国|四国|九州)$/.test(text) ||
-          /^\d+$/.test(text)
-        );
       }
 
       function buildAbsoluteUrl(relativeUrl) {
@@ -192,16 +174,79 @@ export class DietMemberScraper {
         }
 
         let prefecture = '不明';
-        for (let i = 3; i < cells.length; i++) {
-          const text = cells[i]?.textContent?.trim() || '';
-          if (
-            text &&
-            !isHeaderKeyword(text) &&
-            !isPartyKeyword(text) &&
-            isElectoralDistrictKeyword(text)
-          ) {
-            prefecture = text;
-            break;
+        let electionCount = null;
+
+        // The table structure shows electoral districts are in specific positions
+        // Based on debug info, electoral districts appear in specific patterns
+        const allCells = Array.from(cells).map((cell) => cell.textContent?.trim() || '');
+
+        // First, look for prefecture+number patterns (like "岡山1", "大阪14")
+        for (let i = 0; i < allCells.length; i++) {
+          const text = allCells[i];
+          if (text && !isHeaderKeyword(text) && !isPartyKeyword(text)) {
+            // Check for prefecture + number pattern first (highest priority)
+            for (const pref of prefectures) {
+              if (text.match(new RegExp(`^${pref}\\d+$`))) {
+                prefecture = text;
+                break;
+              }
+            }
+            if (prefecture !== '不明') break;
+          }
+        }
+
+        // Look for election count (format: "5（参1）" or pure numbers)
+        for (let i = 0; i < allCells.length; i++) {
+          const text = allCells[i];
+          if (text) {
+            // Check for pattern like "1（参2）", "5（参1）" - House + (Senate)
+            const senateMatch = text.match(/^(\d+)（参(\d+)）$/);
+            if (senateMatch) {
+              const houseCount = parseInt(senateMatch[1]);
+              const senateCount = parseInt(senateMatch[2]);
+              electionCount = { house: houseCount, senate: senateCount };
+              break;
+            }
+
+            // Check for pure number (House only)
+            if (/^\d+$/.test(text)) {
+              const num = parseInt(text);
+              // Election counts are typically 1-25, filter out years or large numbers
+              if (num >= 1 && num <= 25) {
+                electionCount = { house: num };
+                break;
+              }
+            }
+          }
+        }
+        // If not found, look for proportional representation
+        if (prefecture === '不明') {
+          for (let i = 0; i < allCells.length; i++) {
+            const text = allCells[i];
+            if (text?.includes('（比）')) {
+              prefecture = text;
+              break;
+            }
+          }
+        }
+
+        // If no electoral district found, check if any cell contains prefecture + number pattern
+        if (prefecture === '不明') {
+          for (let i = 2; i < cells.length; i++) {
+            const text = cells[i]?.textContent?.trim() || '';
+            if (text && !isHeaderKeyword(text) && !isPartyKeyword(text)) {
+              // Skip pure numbers (election count), look for prefecture names
+              if (!/^\d+$/.test(text)) {
+                // Check if it matches prefecture + number pattern
+                for (const pref of prefectures) {
+                  if (text.includes(pref)) {
+                    prefecture = text;
+                    break;
+                  }
+                }
+                if (prefecture !== '不明') break;
+              }
+            }
           }
         }
 
@@ -216,11 +261,12 @@ export class DietMemberScraper {
           party,
           profileUrl: profileUrl || undefined,
           prefecture,
+          electionCount: electionCount || undefined,
         });
       }
 
       return members;
-    });
+    }, PREFECTURES);
   }
 
   private validateMemberData(member: RawMemberData): boolean {
@@ -285,57 +331,7 @@ export class DietMemberScraper {
     }
 
     // Parse prefecture + district number format
-    const prefectureList = [
-      '北海道',
-      '青森',
-      '岩手',
-      '宮城',
-      '秋田',
-      '山形',
-      '福島',
-      '茨城',
-      '栃木',
-      '群馬',
-      '埼玉',
-      '千葉',
-      '東京',
-      '神奈川',
-      '新潟',
-      '富山',
-      '石川',
-      '福井',
-      '山梨',
-      '長野',
-      '岐阜',
-      '静岡',
-      '愛知',
-      '三重',
-      '滋賀',
-      '京都',
-      '大阪',
-      '兵庫',
-      '奈良',
-      '和歌山',
-      '鳥取',
-      '島根',
-      '岡山',
-      '広島',
-      '山口',
-      '徳島',
-      '香川',
-      '愛媛',
-      '高知',
-      '福岡',
-      '佐賀',
-      '長崎',
-      '熊本',
-      '大分',
-      '宮崎',
-      '鹿児島',
-      '沖縄',
-    ];
-
-    for (const prefecture of prefectureList) {
+    for (const prefecture of PREFECTURES) {
       const match = rawInfo.match(new RegExp(`^${prefecture}(\\d+)$`));
       if (match) {
         return {
@@ -349,7 +345,7 @@ export class DietMemberScraper {
     }
 
     // Prefecture name only
-    if (prefectureList.includes(rawInfo)) {
+    if ((PREFECTURES as readonly string[]).includes(rawInfo)) {
       return {
         election: {
           system: 'single-seat',
