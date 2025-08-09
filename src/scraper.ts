@@ -219,7 +219,6 @@ export class DietMemberScraper {
             }
           }
         }
-
         // If not found, look for proportional representation
         if (prefecture === '不明') {
           for (let i = 0; i < allCells.length; i++) {
