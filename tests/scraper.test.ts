@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test';
 import { DietMemberScraper } from '../src/scraper';
-import type { DietMember } from '../src/types';
 
 test.describe('DietMemberScraper', () => {
   let scraper: DietMemberScraper;
@@ -35,7 +34,7 @@ test.describe('DietMemberScraper', () => {
 
   test('scraped members should have correct structure', async () => {
     const result = await scraper.scrapeHouseOfRepresentativesList();
-    const firstMember = result.members[0];
+    const firstMember = result.members[0]!;
 
     expect(firstMember).toBeDefined();
     expect(typeof firstMember.name).toBe('string');
@@ -82,7 +81,7 @@ test.describe('DietMemberScraper', () => {
     for (const member of singleSeatMembers.slice(0, 5)) { // Check first 5
       expect(member.election.prefecture).toBeDefined();
       expect(typeof member.election.prefecture).toBe('string');
-      expect(member.election.prefecture.length).toBeGreaterThan(0);
+      expect((member.election.prefecture as string).length).toBeGreaterThan(0);
       
       if (member.election.number) {
         expect(typeof member.election.number).toBe('string');
@@ -101,7 +100,7 @@ test.describe('DietMemberScraper', () => {
       for (const member of proportionalMembers.slice(0, 5)) { // Check first 5
         expect(member.election.area).toBeDefined();
         expect(typeof member.election.area).toBe('string');
-        expect(member.election.area.length).toBeGreaterThan(0);
+        expect((member.election.area as string).length).toBeGreaterThan(0);
       }
     }
   });
@@ -111,9 +110,9 @@ test.describe('DietMemberScraper', () => {
     const membersWithFurigana = result.members.filter(member => member.furigana);
     
     if (membersWithFurigana.length > 0) {
-      const memberWithFurigana = membersWithFurigana[0];
+      const memberWithFurigana = membersWithFurigana[0]!;
       expect(typeof memberWithFurigana.furigana).toBe('string');
-      expect(memberWithFurigana.furigana.length).toBeGreaterThan(0);
+      expect((memberWithFurigana.furigana as string).length).toBeGreaterThan(0);
       
       // Should contain hiragana characters
       expect(memberWithFurigana.furigana).toMatch(/[ひらがな]/);
@@ -125,7 +124,7 @@ test.describe('DietMemberScraper', () => {
     const membersWithProfile = result.members.filter(member => member.profileUrl);
     
     if (membersWithProfile.length > 0) {
-      const memberWithProfile = membersWithProfile[0];
+      const memberWithProfile = membersWithProfile[0]!;
       expect(memberWithProfile.profileUrl).toMatch(/^https?:\/\//);
       expect(memberWithProfile.profileUrl).toContain('shugiin.go.jp');
     }
@@ -144,7 +143,7 @@ test.describe('DietMemberScraper', () => {
     
     // Mock a network failure scenario by navigating to invalid URL
     try {
-      const page = await testScraper['browser'].newPage();
+      const page = await testScraper['browser']!.newPage();
       await page.goto('http://invalid-url-that-does-not-exist.test');
     } catch (error) {
       expect(error).toBeDefined();

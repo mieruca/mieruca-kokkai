@@ -9,8 +9,8 @@ test.describe('Election Count Parsing', () => {
       // Check for pattern like "1（参2）", "5（参1）" - House + (Senate)
       const senateMatch = text.match(/^(\d+)（参(\d+)）$/);
       if (senateMatch) {
-        const houseCount = parseInt(senateMatch[1]);
-        const senateCount = parseInt(senateMatch[2]);
+        const houseCount = parseInt(senateMatch[1] as string);
+        const senateCount = parseInt(senateMatch[2] as string);
         return { house: houseCount, senate: senateCount };
       }
       

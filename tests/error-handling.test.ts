@@ -17,7 +17,7 @@ test.describe('Error Handling and Edge Cases', () => {
     await scraper.initialize();
     
     // Test with a mock page that has an empty table
-    const page = await scraper['browser'].newPage();
+    const page = await scraper['browser']!.newPage();
     
     await page.setContent(`
       <html>
@@ -41,7 +41,7 @@ test.describe('Error Handling and Edge Cases', () => {
 
   test('should handle missing table elements', async () => {
     await scraper.initialize();
-    const page = await scraper['browser'].newPage();
+    const page = await scraper['browser']!.newPage();
     
     await page.setContent(`
       <html>
@@ -62,7 +62,7 @@ test.describe('Error Handling and Edge Cases', () => {
 
   test('should handle malformed HTML gracefully', async () => {
     await scraper.initialize();
-    const page = await scraper['browser'].newPage();
+    const page = await scraper['browser']!.newPage();
     
     await page.setContent(`
       <html>
@@ -85,10 +85,11 @@ test.describe('Error Handling and Edge Cases', () => {
     await page.close();
   });
 
-  test('should handle network timeouts appropriately', async () => {
+  test('should handle network timeouts appropriately', async ({}, testInfo) => {
+    testInfo.setTimeout(10000);
     const testScraper = new DietMemberScraper();
     await testScraper.initialize();
-    const page = await testScraper['browser'].newPage();
+    const page = await testScraper['browser']!.newPage();
 
     // Set a very short timeout to simulate timeout scenario
     page.setDefaultTimeout(1);
@@ -97,16 +98,17 @@ test.describe('Error Handling and Edge Cases', () => {
       await page.goto('https://httpstat.us/200?sleep=5000'); // 5 second delay
       expect(true).toBe(false); // Should not reach here
     } catch (error) {
-      expect(error).toBeDefined();
-      expect(error.message).toContain('Timeout');
+      const err = error as Error;
+      expect(err).toBeDefined();
+      expect(err.message).toContain('Timeout');
     }
 
     await testScraper.close();
-  }, 10000); // 10 second test timeout
+  });
 
   test('should handle invalid characters in member data', async () => {
     await scraper.initialize();
-    const page = await scraper['browser'].newPage();
+    const page = await scraper['browser']!.newPage();
     
     await page.setContent(`
       <html>
@@ -143,7 +145,7 @@ test.describe('Error Handling and Edge Cases', () => {
   test('should handle extremely long member names', async () => {
     await scraper.initialize();
     const longName = 'あ'.repeat(1000); // 1000 character name
-    const page = await scraper['browser'].newPage();
+    const page = await scraper['browser']!.newPage();
     
     await page.setContent(`
       <html>
@@ -172,7 +174,7 @@ test.describe('Error Handling and Edge Cases', () => {
 
   test('should handle missing furigana gracefully', async () => {
     await scraper.initialize();
-    const page = await scraper['browser'].newPage();
+    const page = await scraper['browser']!.newPage();
     
     // Simulate a profile page without furigana
     await page.setContent(`
@@ -209,7 +211,7 @@ test.describe('Error Handling and Edge Cases', () => {
     await testScraper.initialize();
     
     // Close browser to simulate crash
-    await testScraper['browser'].close();
+    await testScraper['browser']!.close();
     
     // Subsequent operations should handle the closed browser
     await expect(testScraper.close()).resolves.not.toThrow();
@@ -222,7 +224,7 @@ test.describe('Error Handling and Edge Cases', () => {
       // This should not cause conflicts or errors
       const promises = scrapers.map(async (scraper, index) => {
         await scraper.initialize();
-        const page = await scraper['browser'].newPage();
+        const page = await scraper['browser']!.newPage();
         await page.setContent(`
           <html><body>
             <table>
@@ -288,7 +290,7 @@ test.describe('Error Handling and Edge Cases', () => {
     ];
 
     await scraper.initialize();
-    const page = await scraper['browser'].newPage();
+    const page = await scraper['browser']!.newPage();
     
     for (const partyName of specialPartyNames) {
       await page.setContent(`
