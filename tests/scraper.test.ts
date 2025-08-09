@@ -35,6 +35,7 @@ test.describe('DietMemberScraper', () => {
   test('scraped members should have correct structure', async () => {
     const result = await scraper.scrapeHouseOfRepresentativesList();
     const firstMember = result.members[0];
+    if (!firstMember) throw new Error('No members found');
 
     expect(firstMember).toBeDefined();
     expect(typeof firstMember.name).toBe('string');
@@ -113,6 +114,7 @@ test.describe('DietMemberScraper', () => {
 
     if (membersWithFurigana.length > 0) {
       const memberWithFurigana = membersWithFurigana[0];
+      if (!memberWithFurigana) return;
       expect(typeof memberWithFurigana.furigana).toBe('string');
       expect((memberWithFurigana.furigana as string).length).toBeGreaterThan(0);
 
@@ -127,6 +129,7 @@ test.describe('DietMemberScraper', () => {
 
     if (membersWithProfile.length > 0) {
       const memberWithProfile = membersWithProfile[0];
+      if (!memberWithProfile) return;
       expect(memberWithProfile.profileUrl).toMatch(/^https?:\/\//);
       expect(memberWithProfile.profileUrl).toContain('shugiin.go.jp');
     }

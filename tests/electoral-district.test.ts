@@ -24,7 +24,7 @@ test.describe('Electoral District Parsing', () => {
     area?: string;
   } {
     for (const raw of cellTexts) {
-      const text = (raw || '').replace(/\s+/g, '').trim();
+      const text = (raw || '').replace(/\s+/g, '');
       if (!text) continue;
 
       // Check for prefecture + number pattern (single-seat constituencies)
@@ -47,7 +47,7 @@ test.describe('Electoral District Parsing', () => {
       const proportionalBlocks = PROPORTIONAL_BLOCKS;
 
       for (const block of proportionalBlocks) {
-        if (text.includes(block) || text === block) {
+        if (text.includes(block)) {
           return {
             system: 'proportional-representation',
             area: block,

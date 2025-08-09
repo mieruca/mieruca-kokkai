@@ -12,7 +12,7 @@
     "lint": "biome lint src/ tests/",
     "format": "biome format src/ tests/ --write",
     "check": "biome check src/ tests/",
-    "typecheck": "tsc --project tsconfig.tests.json --noEmit"
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.tests.json"
   },
   "keywords": [
     "playwright",

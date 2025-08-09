@@ -85,8 +85,7 @@ test.describe('Error Handling and Edge Cases', () => {
     await page.close();
   });
 
-  test('should handle network timeouts appropriately', async (_args, testInfo) => {
-    void _args;
+  test('should handle network timeouts appropriately', async (_, testInfo) => {
     testInfo.setTimeout(10000);
     const testScraper = new DietMemberScraper();
     await testScraper.initialize();

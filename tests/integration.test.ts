@@ -3,6 +3,7 @@ import { PREFECTURES } from '../src/constants';
 import { DietMemberScraper } from '../src/scraper';
 
 test.describe('Integration Tests', () => {
+  test.describe.configure({ mode: 'serial' });
   let scraper: DietMemberScraper;
 
   test.beforeEach(async () => {
@@ -170,6 +171,7 @@ test.describe('Integration Tests', () => {
 
     if (membersWithSenateCount.length > 0) {
       const memberWithSenate = membersWithSenateCount[0];
+      if (!memberWithSenate) return;
       expect(memberWithSenate.electionCount).toHaveProperty('house');
       expect(memberWithSenate.electionCount).toHaveProperty('senate');
 
@@ -276,8 +278,7 @@ test.describe('Integration Tests', () => {
     expect(issues.unknownDistricts.length).toBeLessThan(result.members.length * 0.2);
   });
 
-  test('performance and timing validation', async (_args, testInfo) => {
-    void _args;
+  test('performance and timing validation', async (_, testInfo) => {
     test.slow();
     testInfo.setTimeout(60000);
     const startTime = Date.now();
