@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Election Count Parsing', () => {
   // Helper function to simulate the election count extraction logic
-  function parseElectionCount(cellTexts: string[]): number | { house: number; senate?: number } | undefined {
+  function parseElectionCount(cellTexts: string[]): { house: number; senate?: number } | undefined {
     for (const text of cellTexts) {
       if (!text) continue;
       
@@ -17,7 +17,7 @@ test.describe('Election Count Parsing', () => {
       // Check for pure number (House only)
       if (/^\d+$/.test(text)) {
         const num = parseInt(text);
-        if (num >= 1 && num <= 25) { // Reasonable range for election counts
+        if (num >= 1 && num <= 25) { // Range constraint: Japanese Diet election counts are typically 1-25 based on historical data
           return { house: num };
         }
       }

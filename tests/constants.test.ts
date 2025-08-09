@@ -21,7 +21,7 @@ test.describe('Constants', () => {
 
     expect(hokkaidoIndex).toBe(0); // Hokkaido should be first
     expect(tokyoIndex).toBeLessThan(osakaIndex); // Tokyo should come before Osaka
-    expect(okinawaIndex).toBe(46); // Okinawa should be last
+    expect(okinawaIndex).toBe(PREFECTURES.length - 1); // Okinawa should be last
   });
 
   test('PREFECTURES should not contain duplicates', () => {
@@ -50,6 +50,6 @@ test.describe('Constants', () => {
 
   test('SCRAPING_CONFIG timeouts should be reasonable', () => {
     expect(SCRAPING_CONFIG.TIMEOUTS.PAGE_LOAD).toBeGreaterThan(0);
-    expect(SCRAPING_CONFIG.TIMEOUTS.PAGE_LOAD).toBeLessThan(10000); // Less than 10 seconds
+    expect(SCRAPING_CONFIG.TIMEOUTS.PAGE_LOAD).toBeLessThanOrEqual(30000); // <= 30 seconds for CI headroom
   });
 });

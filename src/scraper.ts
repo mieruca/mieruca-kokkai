@@ -121,16 +121,32 @@ export class DietMemberScraper {
           '政党',
           '都道府県',
         ];
-        return headers.includes(text) || text.length < 2;
+        const t = text.trim();
+        return t.length < 2 || headers.some((h) => t === h || t.startsWith(h));
       }
 
       function isPartyKeyword(text: string): boolean {
-        const parties = ['党', '会', '民主', '自民', '公明', '維新', '共産', '立憲', '国民'];
-        return parties.some((keyword) => text.includes(keyword));
+        const t = (text || '').trim();
+        const parties = [
+          '自由民主党',
+          '立憲民主党',
+          '公明党',
+          '日本維新の会',
+          '日本共産党',
+          '国民民主党',
+          'れいわ新選組',
+          '社会民主党',
+          '無所属',
+          '無会派',
+        ];
+        return parties.some((keyword) => t.includes(keyword));
       }
 
       function buildAbsoluteUrl(relativeUrl: string): string {
         const baseUrl = 'https://www.shugiin.go.jp';
+        // Accept absolute http(s) and reject unsafe schemes
+        if (/^https?:\/\//i.test(relativeUrl)) return relativeUrl;
+        if (/^(javascript|data):/i.test(relativeUrl)) return '';
         if (relativeUrl.startsWith('../../../../')) {
           return relativeUrl.replace('../../../../', `${baseUrl}/internet/`);
         }
@@ -158,9 +174,8 @@ export class DietMemberScraper {
         if (seenMembers.has(cleanName)) continue;
         seenMembers.add(cleanName);
 
-        const profileUrl = link?.getAttribute('href')
-          ? buildAbsoluteUrl(link.getAttribute('href') || '')
-          : '';
+        const href = link?.getAttribute('href')?.trim() ?? '';
+        const profileUrl = href ? buildAbsoluteUrl(href) : '';
 
         const furigana = cells[1] ? cells[1].textContent?.trim() : '';
 
@@ -200,7 +215,7 @@ export class DietMemberScraper {
           const text = allCells[i];
           if (text) {
             // Check for pattern like "1（参2）", "5（参1）" - House + (Senate)
-            const senateMatch = text.match(/^(\d+)（参(\d+)）$/);
+            const senateMatch = text.replace(/\s+/g, '').match(/^(\d+)[（(]参(\d+)[）)]$/);
             if (senateMatch?.[1] && senateMatch[2]) {
               const houseCount = parseInt(senateMatch[1]);
               const senateCount = parseInt(senateMatch[2]);

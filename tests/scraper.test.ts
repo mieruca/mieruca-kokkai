@@ -115,7 +115,7 @@ test.describe('DietMemberScraper', () => {
       expect((memberWithFurigana.furigana as string).length).toBeGreaterThan(0);
       
       // Should contain hiragana characters
-      expect(memberWithFurigana.furigana).toMatch(/[ぁ-ん]/);
+      expect(memberWithFurigana.furigana).toMatch(/[\u3041-\u309F]/);
     }
   });
 

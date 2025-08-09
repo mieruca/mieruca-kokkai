@@ -1,6 +1,13 @@
 import { test, expect } from '@playwright/test';
 import { PREFECTURES } from '../src/constants';
 
+const PROPORTIONAL_BLOCKS = [
+  '比例北海道ブロック', '比例東北ブロック', '比例北関東ブロック',
+  '比例南関東ブロック', '比例東京ブロック', '比例北陸信越ブロック',
+  '比例東海ブロック', '比例近畿ブロック', '比例中国ブロック',
+  '比例四国ブロック', '比例九州ブロック'
+];
+
 test.describe('Electoral District Parsing', () => {
   // Helper function to simulate the electoral district extraction logic
   function parseElectoralDistrict(cellTexts: string[]): {
@@ -9,7 +16,8 @@ test.describe('Electoral District Parsing', () => {
     number?: string;
     area?: string;
   } {
-    for (const text of cellTexts) {
+    for (const raw of cellTexts) {
+      const text = (raw || '').replace(/\s+/g, '').trim();
       if (!text) continue;
       
       // Check for prefecture + number pattern (single-seat constituencies)
@@ -29,12 +37,7 @@ test.describe('Electoral District Parsing', () => {
       }
       
       // Check for proportional representation blocks
-      const proportionalBlocks = [
-        '比例北海道ブロック', '比例東北ブロック', '比例北関東ブロック',
-        '比例南関東ブロック', '比例東京ブロック', '比例北陸信越ブロック',
-        '比例東海ブロック', '比例近畿ブロック', '比例中国ブロック',
-        '比例四国ブロック', '比例九州ブロック'
-      ];
+      const proportionalBlocks = PROPORTIONAL_BLOCKS;
       
       for (const block of proportionalBlocks) {
         if (text.includes(block) || text === block) {
@@ -287,12 +290,7 @@ test.describe('Electoral District Parsing', () => {
   });
 
   test('should validate all proportional representation blocks', () => {
-    const allBlocks = [
-      '比例北海道ブロック', '比例東北ブロック', '比例北関東ブロック',
-      '比例南関東ブロック', '比例東京ブロック', '比例北陸信越ブロック',
-      '比例東海ブロック', '比例近畿ブロック', '比例中国ブロック',
-      '比例四国ブロック', '比例九州ブロック'
-    ];
+    const allBlocks = PROPORTIONAL_BLOCKS;
 
     for (const block of allBlocks) {
       const result = parseElectoralDistrict([block]);

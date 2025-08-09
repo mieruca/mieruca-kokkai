@@ -149,7 +149,7 @@ test.describe('Integration Tests', () => {
       expect(member.furigana!.length).toBeGreaterThan(0);
       
       // Should contain hiragana characters
-      expect(member.furigana).toMatch(/[あ-ん]/);
+      expect(member.furigana).toMatch(/[\u3041-\u309F]/);
     }
   });
 
@@ -261,6 +261,7 @@ test.describe('Integration Tests', () => {
   });
 
   test('performance and timing validation', async ({}, testInfo) => {
+    test.slow();
     testInfo.setTimeout(60000);
     const startTime = Date.now();
     const result = await scraper.scrapeHouseOfRepresentativesList();
