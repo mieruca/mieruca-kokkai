@@ -1,6 +1,8 @@
 .claude/
 !.claude/settings.json
 
+.serena/cache
+
 node_modules/
 dist/
 *.json
