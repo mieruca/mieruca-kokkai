@@ -25,9 +25,9 @@ test.describe('Integration Tests', () => {
     expect(result.members.length).toBeGreaterThan(0);
     expect(result.source).toBe('house-of-representatives-list');
 
-    // Should have a reasonable number of members (current data shows ~112 members)
-    expect(result.members.length).toBeGreaterThan(100);
-    expect(result.members.length).toBeLessThan(200);
+    // Should have a reasonable number of members (current data shows ~464 members across all pages)
+    expect(result.members.length).toBeGreaterThan(400);
+    expect(result.members.length).toBeLessThan(500);
 
     // Sample validation on first few members
     const sampleMembers = result.members.slice(0, 10);
@@ -291,7 +291,7 @@ test.describe('Integration Tests', () => {
     expect(duration).toBeLessThan(30000);
 
     // Should return reasonable amount of data
-    expect(result.members.length).toBeGreaterThan(100);
+    expect(result.members.length).toBeGreaterThan(400);
 
     console.log(`Scraping completed in ${duration}ms, found ${result.members.length} members`);
   });

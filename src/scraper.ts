@@ -53,7 +53,7 @@ export class DietMemberScraper {
   }
 
   /**
-   * Main method to scrape House of Representatives members
+   * Main method to scrape House of Representatives members from all pages
    */
   async scrapeHouseOfRepresentativesList(): Promise<ScrapeResult> {
     if (!this.browser) {
@@ -66,44 +66,70 @@ export class DietMemberScraper {
       (window as unknown).__name = () => {};
     });
     const processedMembers: DietMember[] = [];
+    let totalRawMembers = 0;
 
     try {
-      console.log('Scraping House of Representatives list...');
-      await page.goto(SCRAPING_CONFIG.URLS.HOUSE_OF_REPRESENTATIVES, {
-        waitUntil: 'domcontentloaded',
-      });
-      await page.waitForSelector('table', { timeout: SCRAPING_CONFIG.TIMEOUTS.PAGE_LOAD });
+      console.log('Scraping House of Representatives list from all pages...');
 
-      const rawMemberData = await this.extractMembersFromPage(page);
-      console.log(`Found ${rawMemberData.length} raw members`);
+      // Scrape all pages (あ行 through わ行)
+      const pages = SCRAPING_CONFIG.URLS.HOUSE_OF_REPRESENTATIVES_PAGES;
 
-      for (const [index, member] of rawMemberData.entries()) {
-        if (!this.validateMemberData(member)) {
-          continue;
-        }
+      for (const [pageIndex, pageUrl] of pages.entries()) {
+        const syllabaryNames = [
+          'あ行',
+          'か行',
+          'さ行',
+          'た行',
+          'な行',
+          'は行',
+          'ま行',
+          'や行',
+          'ら行',
+          'わ行',
+        ];
+        console.log(`\n--- Scraping page ${pageIndex + 1}/10: ${syllabaryNames[pageIndex]} ---`);
 
-        try {
-          console.log(
-            `Processing member ${index + 1}/${rawMemberData.length}: ${member.name.full}`
-          );
+        await page.goto(pageUrl, {
+          waitUntil: 'domcontentloaded',
+        });
+        await page.waitForSelector('table', { timeout: SCRAPING_CONFIG.TIMEOUTS.PAGE_LOAD });
 
-          const electionInfo = this.parseElectionInfo(member.prefecture);
-          const processedMember: DietMember = {
-            name: member.name.full,
-            party: member.party,
-            ...electionInfo,
-            ...(member.furigana && { furigana: this.normalizeFurigana(member.furigana) }),
-            ...(member.profileUrl && { profileUrl: member.profileUrl }),
-            ...(member.electionCount && { electionCount: member.electionCount }),
-          };
+        const rawMemberData = await this.extractMembersFromPage(page);
+        console.log(
+          `Found ${rawMemberData.length} raw members on ${syllabaryNames[pageIndex]} page`
+        );
+        totalRawMembers += rawMemberData.length;
 
-          processedMembers.push(processedMember);
-        } catch (error) {
-          console.warn(`Failed to process member: ${member.name?.full}`, error);
+        for (const member of rawMemberData) {
+          if (!this.validateMemberData(member)) {
+            continue;
+          }
+
+          try {
+            console.log(
+              `Processing member ${processedMembers.length + 1}: ${member.name.full} (${syllabaryNames[pageIndex]})`
+            );
+
+            const electionInfo = this.parseElectionInfo(member.prefecture);
+            const processedMember: DietMember = {
+              name: member.name.full,
+              party: member.party,
+              ...electionInfo,
+              ...(member.furigana && { furigana: this.normalizeFurigana(member.furigana) }),
+              ...(member.profileUrl && { profileUrl: member.profileUrl }),
+              ...(member.electionCount && { electionCount: member.electionCount }),
+            };
+
+            processedMembers.push(processedMember);
+          } catch (error) {
+            console.warn(`Failed to process member: ${member.name?.full}`, error);
+          }
         }
       }
 
-      console.log(`Successfully processed ${processedMembers.length} members`);
+      console.log(`\n=== Summary ===`);
+      console.log(`Total raw members found across all pages: ${totalRawMembers}`);
+      console.log(`Successfully processed: ${processedMembers.length} members`);
 
       if (processedMembers.length === 0) {
         throw new Error('No valid members were scraped. The website structure may have changed.');
