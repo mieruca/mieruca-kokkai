@@ -278,7 +278,7 @@ test.describe('Integration Tests', () => {
     expect(issues.unknownDistricts.length).toBeLessThan(result.members.length * 0.2);
   });
 
-  test('performance and timing validation', async (_, testInfo) => {
+  test('performance and timing validation', async ({}, testInfo) => {
     test.slow();
     testInfo.setTimeout(60000);
     const startTime = Date.now();
