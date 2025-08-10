@@ -9,18 +9,28 @@ import type {
 
 export class HouseOfRepresentativesScraper {
   private browser: Browser | null = null;
+  private ownsBrowser = false;
 
   async initialize(): Promise<void> {
+    if (this.browser) return; // already injected
     this.browser = await chromium.launch({
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
+    this.ownsBrowser = true;
   }
 
   async close(): Promise<void> {
-    if (this.browser) {
+    if (this.browser && this.ownsBrowser) {
       await this.browser.close();
     }
+    this.browser = null;
+  }
+
+  // Share external browser (owned by caller)
+  public useBrowser(browser: Browser): void {
+    this.browser = browser;
+    this.ownsBrowser = false;
   }
 
   /**
@@ -38,9 +48,10 @@ export class HouseOfRepresentativesScraper {
    * For tests: force-close the underlying browser without changing public API.
    */
   public async forceCloseBrowserForTest(): Promise<void> {
-    if (this.browser) {
+    if (this.browser && this.ownsBrowser) {
       await this.browser.close();
     }
+    this.browser = null;
   }
 
   /**
@@ -52,10 +63,6 @@ export class HouseOfRepresentativesScraper {
     }
 
     const page = await this.browser.newPage();
-    await page.addInitScript(() => {
-      // @ts-ignore
-      (window as unknown).__name = () => {};
-    });
     const processedMembers: HouseOfRepresentativesMember[] = [];
     let totalRawMembers = 0;
 
@@ -229,9 +236,12 @@ export class HouseOfRepresentativesScraper {
           if (text && !isHeaderKeyword(text) && !isPartyKeyword(text)) {
             // Check for prefecture + number pattern first (highest priority)
             for (const pref of prefectures) {
-              if (text.match(new RegExp(`^${pref}\\\\d+$`))) {
-                prefecture = text;
-                break;
+              if (text.startsWith(pref)) {
+                const num = text.slice(pref.length);
+                if (/^\d+$/.test(num)) {
+                  prefecture = text;
+                  break;
+                }
               }
             }
             if (prefecture !== '不明') break;
@@ -243,7 +253,7 @@ export class HouseOfRepresentativesScraper {
           const text = allCells[i];
           if (text) {
             // Check for pattern like "1（参2）", "5（参1）" - House + (Senate)
-            const senateMatch = text.replace(/\\s+/g, '').match(/^(\\d+)[（(]参(\\d+)[）)]$/);
+            const senateMatch = text.replace(/\s+/g, '').match(/^(\d+)[（(]参(\d+)[）)]$/);
             if (senateMatch?.[1] && senateMatch[2]) {
               const houseCount = parseInt(senateMatch[1]);
               const senateCount = parseInt(senateMatch[2]);
@@ -252,7 +262,7 @@ export class HouseOfRepresentativesScraper {
             }
 
             // Check for pure number (House only)
-            if (/^\\d+$/.test(text)) {
+            if (/^\d+$/.test(text)) {
               const num = parseInt(text);
               // Election counts are typically 1-25, filter out years or large numbers
               if (num >= 1 && num <= 25) {
@@ -279,7 +289,7 @@ export class HouseOfRepresentativesScraper {
             const text = cells[i]?.textContent?.trim() || '';
             if (text && !isHeaderKeyword(text) && !isPartyKeyword(text)) {
               // Skip pure numbers (election count), look for prefecture names
-              if (!/^\\d+$/.test(text)) {
+              if (!/^\d+$/.test(text)) {
                 // Check if it matches prefecture + number pattern
                 for (const pref of prefectures) {
                   if (text.includes(pref)) {
@@ -293,7 +303,7 @@ export class HouseOfRepresentativesScraper {
           }
         }
 
-        const nameParts = cleanName.split(/\\s+/);
+        const nameParts = cleanName.split(/\s+/);
         const memberData: RawMemberData = {
           name: {
             full: cleanName,
@@ -386,15 +396,17 @@ export class HouseOfRepresentativesScraper {
 
     // Parse prefecture + district number format
     for (const prefecture of PREFECTURES) {
-      const match = rawInfo.match(new RegExp(`^${prefecture}(\\\\d+)$`));
-      if (match) {
-        return {
-          election: {
-            system: 'single-seat',
-            prefecture: prefecture,
-            number: match[1],
-          },
-        };
+      if (rawInfo.startsWith(prefecture)) {
+        const num = rawInfo.slice(prefecture.length);
+        if (/^\d+$/.test(num)) {
+          return {
+            election: {
+              system: 'single-seat',
+              prefecture,
+              number: num,
+            },
+          };
+        }
       }
     }
 

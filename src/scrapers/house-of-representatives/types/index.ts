@@ -1,15 +1,20 @@
+export type ElectionSystem = 'single-seat' | 'proportional-representation';
+export type ElectionCount = number | { house: number; senate?: number };
+
+export interface Election {
+  system: ElectionSystem;
+  prefecture?: string;
+  number?: string | undefined;
+  area?: string;
+}
+
 export interface HouseOfRepresentativesMember {
   name: string;
   furigana?: string;
   party: string;
   profileUrl?: string;
-  electionCount?: number | { house: number; senate?: number };
-  election: {
-    system: 'single-seat' | 'proportional-representation';
-    prefecture?: string;
-    number?: string | undefined;
-    area?: string;
-  };
+  electionCount?: ElectionCount;
+  election: Election;
 }
 
 export interface HouseOfRepresentativesResult {
@@ -29,5 +34,5 @@ export interface RawMemberData {
   party: string;
   profileUrl?: string;
   prefecture: string;
-  electionCount?: number | { house: number; senate?: number };
+  electionCount?: ElectionCount;
 }

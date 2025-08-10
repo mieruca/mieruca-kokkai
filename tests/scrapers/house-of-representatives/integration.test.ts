@@ -6,12 +6,12 @@ test.describe('House of Representatives Integration Tests', () => {
   test.describe.configure({ mode: 'serial' });
   let scraper: HouseOfRepresentativesScraper;
 
-  test.beforeEach(async () => {
+  test.beforeAll(async () => {
     scraper = new HouseOfRepresentativesScraper();
     await scraper.initialize();
   });
 
-  test.afterEach(async () => {
+  test.afterAll(async () => {
     await scraper.close();
   });
 

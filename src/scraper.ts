@@ -15,7 +15,8 @@ export class DietMemberScraper {
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
-    await this.houseOfRepresentativesScraper.initialize();
+    // Share the same browser
+    this.houseOfRepresentativesScraper.useBrowser(this.browser);
   }
 
   async close(): Promise<void> {
@@ -43,7 +44,7 @@ export class DietMemberScraper {
     if (this.browser) {
       await this.browser.close();
     }
-    await this.houseOfRepresentativesScraper.forceCloseBrowserForTest();
+    // Note: houseOfRepresentativesScraper uses shared browser, so no need to close it separately
   }
 
   /**

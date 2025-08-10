@@ -60,12 +60,35 @@ test.describe('Constants', () => {
     expect(baseUrl).toContain('shugiin.go.jp');
     expect(baseUrl).toContain('1giin.htm');
 
+    // BASE_URL should match the first page
+    expect(HOUSE_OF_REPRESENTATIVES_CONFIG.URLS.BASE_URL).toBe(
+      HOUSE_OF_REPRESENTATIVES_CONFIG.URLS.ALL_PAGES[0]
+    );
+
+    // ALL_PAGES should be unique
+    expect(new Set(HOUSE_OF_REPRESENTATIVES_CONFIG.URLS.ALL_PAGES).size).toBe(
+      HOUSE_OF_REPRESENTATIVES_CONFIG.URLS.ALL_PAGES.length
+    );
+
+    // Names and pages should have 1:1 index mapping
+    expect(HOUSE_OF_REPRESENTATIVES_CONFIG.URLS.ALL_PAGES.length).toBe(
+      HOUSE_OF_REPRESENTATIVES_CONFIG.SYLLABARY_NAMES.length
+    );
+
     // Test all pages
     for (const url of HOUSE_OF_REPRESENTATIVES_CONFIG.URLS.ALL_PAGES) {
       expect(url).toMatch(/^https?:\/\//);
       expect(url).toContain('shugiin.go.jp');
       expect(url).toMatch(/\d+giin\.htm$/);
     }
+
+    // Optional: verify mapping roughly matches the numeric suffix
+    HOUSE_OF_REPRESENTATIVES_CONFIG.URLS.ALL_PAGES.forEach((url, i) => {
+      const match = url.match(/(\d+)giin\.htm$/);
+      expect(match).not.toBeNull();
+      // i: 0..9 should correspond to 1..10
+      expect(Number(match?.[1])).toBe(i + 1);
+    });
   });
 
   test('SCRAPING_CONFIG timeouts should be reasonable', () => {
