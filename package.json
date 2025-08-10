@@ -9,10 +9,10 @@
     "start": "node dist/index.js",
     "test": "playwright test",
     "prepare": "husky",
-    "lint": "biome lint src/",
-    "format": "biome format src/ --write",
-    "check": "biome check src/",
-    "typecheck": "tsc --noEmit"
+    "lint": "biome lint src/ tests/",
+    "format": "biome format src/ tests/ --write",
+    "check": "biome check src/ tests/",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.tests.json"
   },
   "keywords": [
     "playwright",
@@ -36,7 +36,7 @@
     "playwright": "^1.40.0"
   },
   "lint-staged": {
-    "*.{ts,js}": [
+    "{src,tests}/**/*.{ts,js}": [
       "biome check --write",
       "biome format --write"
     ]
