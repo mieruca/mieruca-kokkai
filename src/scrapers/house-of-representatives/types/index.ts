@@ -3,9 +3,9 @@ export type ElectionCount = number | { house: number; senate?: number };
 
 export interface Election {
   system: ElectionSystem;
-  prefecture?: string;
+  prefecture?: string | undefined;
   number?: string | undefined;
-  area?: string;
+  area?: string | undefined;
 }
 
 export interface HouseOfRepresentativesMember {

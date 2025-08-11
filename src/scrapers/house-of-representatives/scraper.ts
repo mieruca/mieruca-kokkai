@@ -39,7 +39,7 @@ export class HouseOfRepresentativesScraper {
    */
   public async newPage(): Promise<Page> {
     if (!this.browser) {
-      throw new Error('Browser not initialized. Call initialize() first.');
+      throw new Error('Browser not initialized. Call initialize() or useBrowser() first.');
     }
     return this.browser.newPage();
   }
@@ -59,7 +59,7 @@ export class HouseOfRepresentativesScraper {
    */
   async scrapeAllPages(): Promise<HouseOfRepresentativesResult> {
     if (!this.browser) {
-      throw new Error('Browser not initialized. Call initialize() first.');
+      throw new Error('Browser not initialized. Call initialize() or useBrowser() first.');
     }
 
     const page = await this.browser.newPage();
@@ -74,7 +74,10 @@ export class HouseOfRepresentativesScraper {
       const syllabaryNames = HOUSE_OF_REPRESENTATIVES_CONFIG.SYLLABARY_NAMES;
 
       for (const [pageIndex, pageUrl] of pages.entries()) {
-        console.log(`\n--- Scraping page ${pageIndex + 1}/10: ${syllabaryNames[pageIndex]} ---`);
+        console.log(
+          `
+--- Scraping page ${pageIndex + 1}/${pages.length}: ${syllabaryNames[pageIndex]} ---`
+        );
 
         await page.goto(pageUrl, {
           waitUntil: 'domcontentloaded',
