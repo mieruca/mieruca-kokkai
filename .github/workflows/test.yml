@@ -29,7 +29,7 @@ jobs:
       run: npx tsc --noEmit
       
     - name: Run lint
-      run: npm run lint
+      run: npx biome lint src/ tests/
       
     - name: Run build
       run: npm run build
