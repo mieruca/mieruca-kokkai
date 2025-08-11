@@ -1,22 +1,22 @@
 import { expect, test } from '@playwright/test';
-import { PREFECTURES } from '../src/constants';
-import { DietMemberScraper } from '../src/scraper';
+import { PREFECTURES } from '../../../src/constants';
+import { HouseOfRepresentativesScraper } from '../../../src/scrapers/house-of-representatives';
 
-test.describe('Integration Tests', () => {
+test.describe('House of Representatives Integration Tests', () => {
   test.describe.configure({ mode: 'serial' });
-  let scraper: DietMemberScraper;
+  let scraper: HouseOfRepresentativesScraper;
 
-  test.beforeEach(async () => {
-    scraper = new DietMemberScraper();
+  test.beforeAll(async () => {
+    scraper = new HouseOfRepresentativesScraper();
     await scraper.initialize();
   });
 
-  test.afterEach(async () => {
+  test.afterAll(async () => {
     await scraper.close();
   });
 
   test('full scraping workflow should work end-to-end', async () => {
-    const result = await scraper.scrapeHouseOfRepresentativesList();
+    const result = await scraper.scrapeAllPages();
 
     // Basic result validation
     expect(result).toBeDefined();
@@ -67,7 +67,7 @@ test.describe('Integration Tests', () => {
   });
 
   test('should have members from all major prefectures', async () => {
-    const result = await scraper.scrapeHouseOfRepresentativesList();
+    const result = await scraper.scrapeAllPages();
     const singleSeatMembers = result.members.filter(
       (member) => member.election.system === 'single-seat'
     );
@@ -97,7 +97,7 @@ test.describe('Integration Tests', () => {
   });
 
   test('should have both single-seat and proportional representation members', async () => {
-    const result = await scraper.scrapeHouseOfRepresentativesList();
+    const result = await scraper.scrapeAllPages();
 
     const singleSeatCount = result.members.filter(
       (member) => member.election.system === 'single-seat'
@@ -117,7 +117,7 @@ test.describe('Integration Tests', () => {
   });
 
   test('should have diverse party representation', async () => {
-    const result = await scraper.scrapeHouseOfRepresentativesList();
+    const result = await scraper.scrapeAllPages();
     const parties = new Set(result.members.map((member) => member.party));
 
     // Should have multiple parties
@@ -138,7 +138,7 @@ test.describe('Integration Tests', () => {
   });
 
   test('should extract furigana for some members', async () => {
-    const result = await scraper.scrapeHouseOfRepresentativesList();
+    const result = await scraper.scrapeAllPages();
     const membersWithFurigana = result.members.filter((member) => member.furigana);
 
     // Should extract furigana for at least some members
@@ -158,7 +158,7 @@ test.describe('Integration Tests', () => {
   });
 
   test('should extract election counts for members', async () => {
-    const result = await scraper.scrapeHouseOfRepresentativesList();
+    const result = await scraper.scrapeAllPages();
     const membersWithElectionCount = result.members.filter((member) => member.electionCount);
 
     // Should extract election count for at least some members
@@ -185,7 +185,7 @@ test.describe('Integration Tests', () => {
   });
 
   test('data consistency validation', async () => {
-    const result = await scraper.scrapeHouseOfRepresentativesList();
+    const result = await scraper.scrapeAllPages();
 
     // Validate single-seat consistency
     const singleSeatMembers = result.members.filter(
@@ -237,7 +237,7 @@ test.describe('Integration Tests', () => {
   });
 
   test('should handle real-world data edge cases', async () => {
-    const result = await scraper.scrapeHouseOfRepresentativesList();
+    const result = await scraper.scrapeAllPages();
 
     // Check for common data quality issues
     const issues = {
@@ -278,11 +278,11 @@ test.describe('Integration Tests', () => {
     expect(issues.unknownDistricts.length).toBeLessThan(result.members.length * 0.2);
   });
 
-  test('performance and timing validation', async ({}, testInfo) => {
+  test('performance and timing validation', async (_fixtures, testInfo) => {
     test.slow();
     testInfo.setTimeout(60000);
     const startTime = Date.now();
-    const result = await scraper.scrapeHouseOfRepresentativesList();
+    const result = await scraper.scrapeAllPages();
     const endTime = Date.now();
 
     const duration = endTime - startTime;

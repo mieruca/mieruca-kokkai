@@ -6,9 +6,9 @@ export interface DietMember {
   electionCount?: number | { house: number; senate?: number };
   election: {
     system: 'single-seat' | 'proportional-representation';
-    prefecture?: string;
+    prefecture?: string | undefined;
     number?: string | undefined;
-    area?: string;
+    area?: string | undefined;
   };
 }
 
