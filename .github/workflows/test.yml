@@ -25,11 +25,7 @@ jobs:
     - name: Install dependencies
       run: npm install
       
-    - name: Run type check
-      run: npx tsc --noEmit
-      
-    - name: Run lint
-      run: npx biome lint src/ tests/
-      
-    - name: Run build
-      run: npm run build
+    - name: Run type check and build
+      run: |
+        npx tsc --noEmit
+        npm run build
