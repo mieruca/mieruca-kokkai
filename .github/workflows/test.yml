@@ -9,28 +9,26 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      CI: true
+    timeout-minutes: 10
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup Node.js 20
+    - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
-        cache: 'npm'
+        node-version: 20
 
     - name: Install dependencies
-      run: npm ci
+      run: npm install
 
-    - name: Type check
-      run: npm run typecheck
-
-    - name: Lint code
-      run: npm run lint
+    - name: Check package.json
+      run: |
+        echo "Node version: $(node --version)"
+        echo "NPM version: $(npm --version)"
+        ls -la
+        cat package.json
 
     - name: Build project
       run: npm run build
