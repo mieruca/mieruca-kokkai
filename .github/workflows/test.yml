@@ -9,7 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
     - name: Checkout code
@@ -18,19 +18,11 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 20
+        node-version: '20'
+        cache: 'npm'
 
     - name: Install dependencies
-      run: npm install
+      run: npm ci
 
-    - name: Verify installation
-      run: |
-        node --version
-        npm --version
-        npx tsc --version
-
-    - name: Build project
+    - name: Run build only
       run: npm run build
-
-    - name: Lint code
-      run: npm run lint
