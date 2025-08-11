@@ -23,12 +23,11 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Check package.json
-      run: |
-        echo "Node version: $(node --version)"
-        echo "NPM version: $(npm --version)"
-        ls -la
-        cat package.json
+    - name: Type check
+      run: npm run typecheck
+
+    - name: Lint code  
+      run: npm run lint
 
     - name: Build project
       run: npm run build
