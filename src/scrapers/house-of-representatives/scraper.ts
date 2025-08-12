@@ -575,7 +575,7 @@ export class HouseOfRepresentativesScraper {
         const headingText = cleanText(await mainHeading.textContent());
         // Extract name and furigana from heading like "逢沢 一郎（あいさわ いちろう）"
         const nameMatch = headingText.match(/^([^(（]+)[（(]([^)）]+)[）)]$/);
-        if (nameMatch) {
+        if (nameMatch && nameMatch[1] && nameMatch[2]) {
           profile.fullName = nameMatch[1].trim();
           profile.furigana = nameMatch[2].trim();
         } else {
@@ -590,7 +590,7 @@ export class HouseOfRepresentativesScraper {
       // Extract election district and party information
       // Example: "小選挙区（岡山県第一区）選出、自由民主党・無所属の会"
       const electionMatch = contentText.match(/([^、]+選出)[、，]([^、]+)/);
-      if (electionMatch) {
+      if (electionMatch && electionMatch[1] && electionMatch[2]) {
         profile.electionDistrict = electionMatch[1].trim();
         profile.partyAffiliation = electionMatch[2].trim();
       }
@@ -598,12 +598,12 @@ export class HouseOfRepresentativesScraper {
       // Extract birth information
       // Example: "昭和二十九年六月岡山県岡山市に生まれる"
       const birthMatch = contentText.match(/(昭和|平成|令和)([^年]+年[^に]+に生まれる)/);
-      if (birthMatch) {
+      if (birthMatch && birthMatch[1] && birthMatch[2]) {
         profile.birthDate = birthMatch[1] + birthMatch[2];
 
         // Extract birth place more specifically
         const birthPlaceMatch = birthMatch[2].match(/年[^に]*([^に]+)に生まれる/);
-        if (birthPlaceMatch) {
+        if (birthPlaceMatch && birthPlaceMatch[1]) {
           profile.birthPlace = birthPlaceMatch[1].trim();
         }
       }
@@ -628,13 +628,16 @@ export class HouseOfRepresentativesScraper {
       }
 
       if (educationMatches.length > 0) {
-        profile.education = educationMatches[0];
-        profile.academicBackground = educationMatches;
+        const firstEducation = educationMatches[0];
+        if (firstEducation) {
+          profile.education = firstEducation;
+          profile.academicBackground = educationMatches;
 
-        // Extract university name specifically
-        const uniMatch = educationMatches[0].match(/([^、，]+大学)/);
-        if (uniMatch) {
-          profile.university = uniMatch[1];
+          // Extract university name specifically
+          const uniMatch = firstEducation.match(/([^、，]+大学)/);
+          if (uniMatch && uniMatch[1]) {
+            profile.university = uniMatch[1];
+          }
         }
       }
 
@@ -683,12 +686,12 @@ export class HouseOfRepresentativesScraper {
       // Extract election history and count
       // Example: "当選十三回（38 39 40 41 42 43 44 45 46 47 48 49 50）"
       const electionHistoryMatch = contentText.match(/当選([^回]+回)[（(]([^）)]+)[）)]/);
-      if (electionHistoryMatch) {
+      if (electionHistoryMatch && electionHistoryMatch[1] && electionHistoryMatch[2]) {
         profile.electionHistory = `当選${electionHistoryMatch[1]}`;
 
         // Extract election count as number
         const countMatch = electionHistoryMatch[1].match(/([\d一二三四五六七八九十]+)回/);
-        if (countMatch) {
+        if (countMatch && countMatch[1]) {
           profile.electionCount = this.convertJapaneseNumber(countMatch[1]);
         }
 
@@ -741,13 +744,13 @@ export class HouseOfRepresentativesScraper {
 
       // Add information about organizations
       if (organizations.length > 0) {
-        additionalInfo.関連組織 = organizations.join('、');
+        additionalInfo['関連組織'] = organizations.join('、');
       }
 
       // Add date information if available
       const dateMatch = contentText.match(/(令和\d+年\d+月現在)/);
-      if (dateMatch) {
-        additionalInfo.情報更新日 = dateMatch[1];
+      if (dateMatch && dateMatch[1]) {
+        additionalInfo['情報更新日'] = dateMatch[1];
       }
 
       if (Object.keys(additionalInfo).length > 0) {
