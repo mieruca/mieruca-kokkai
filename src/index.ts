@@ -9,14 +9,43 @@ async function main() {
 
   // Parse command line arguments
   const args = process.argv.slice(2);
-  const includeProfiles = args.includes('--profiles');
+  const scriptName = args[0] || 'basic';
   const forceRefresh = args.includes('--force-refresh');
-  const getAllProfiles = args.includes('--all');
-  const maxProfiles = getAllProfiles
-    ? Number.MAX_SAFE_INTEGER // No limit when --all is specified
-    : args.includes('--max-profiles')
-      ? parseInt(args[args.indexOf('--max-profiles') + 1] ?? '10') || 10
-      : 10;
+  const maxProfilesArg = args.includes('--max-profiles')
+    ? parseInt(args[args.indexOf('--max-profiles') + 1] ?? '10') || 10
+    : 10;
+
+  // Determine scraping mode based on script name
+  let includeProfiles = false;
+  let getAllProfiles = false;
+  let maxProfiles = 10;
+
+  switch (scriptName.toLowerCase()) {
+    case 'basic':
+      includeProfiles = false;
+      break;
+    case 'profiles':
+      includeProfiles = true;
+      maxProfiles = maxProfilesArg;
+      break;
+    case 'profiles-all':
+    case 'all-profiles':
+    case 'all':
+      includeProfiles = true;
+      getAllProfiles = true;
+      maxProfiles = Number.MAX_SAFE_INTEGER;
+      break;
+    default:
+      console.error(`❌ Unknown script: ${scriptName}`);
+      console.log('\n📖 Available scripts:');
+      console.log('  basic        - Scrape basic member data only');
+      console.log('  profiles     - Scrape with profiles (default: 10, use --max-profiles N)');
+      console.log('  all-profiles - Scrape ALL members with profiles');
+      console.log('\n🔧 Options:');
+      console.log('  --force-refresh  - Ignore cache and fetch fresh data');
+      console.log('  --max-profiles N - Limit profile scraping to N members (profiles only)');
+      process.exit(1);
+  }
 
   try {
     // Ensure output directory exists
@@ -49,13 +78,14 @@ async function main() {
         console.log('Initializing browser...');
         await scraper.initialize();
 
+        console.log(`🚀 Running script: ${scriptName}`);
         if (getAllProfiles) {
           console.log(
-            'Starting to scrape House of Representatives with profiles for ALL members...'
+            '📋 Starting to scrape House of Representatives with profiles for ALL members...'
           );
         } else {
           console.log(
-            `Starting to scrape House of Representatives with profiles (max: ${maxProfiles})...`
+            `📋 Starting to scrape House of Representatives with profiles (max: ${maxProfiles})...`
           );
         }
         result = await scraper.scrapeHouseOfRepresentativesWithProfiles({
@@ -127,7 +157,8 @@ async function main() {
         console.log('Initializing browser...');
         await scraper.initialize();
 
-        console.log('Starting to scrape House of Representatives (basic data only)...');
+        console.log(`🚀 Running script: ${scriptName}`);
+        console.log('📋 Starting to scrape House of Representatives (basic data only)...');
         result = await scraper.scrapeHouseOfRepresentativesList();
 
         console.log(`Scraped ${result.members.length} members`);
@@ -141,14 +172,16 @@ async function main() {
       console.log(JSON.stringify(result.members.slice(0, 3), null, 2));
     }
 
-    console.log('\nUsage:');
-    console.log('  npm run dev                         # Basic member data only');
-    console.log(
-      '  npm run dev -- --profiles           # Include profile data (default: 10 profiles)'
-    );
-    console.log('  npm run dev -- --profiles --max-profiles 25  # Include up to 25 profiles');
-    console.log("  npm run dev -- --profiles --all     # Include ALL members' profiles");
-    console.log('  npm run dev -- --force-refresh      # Force refresh, ignore cache');
+    console.log('\n📖 Usage:');
+    console.log('  npm run dev basic                   # Basic member data only (default)');
+    console.log('  npm run dev profiles                # Include profile data (default: 10)');
+    console.log('  npm run dev profiles --max-profiles 25  # Include up to 25 profiles');
+    console.log("  npm run dev all-profiles            # Include ALL members' profiles");
+    console.log('\n🔧 Options:');
+    console.log('  --force-refresh                     # Force refresh, ignore cache');
+    console.log('  --max-profiles N                    # Limit profiles to N members');
+    console.log('\n💡 Script aliases:');
+    console.log('  all-profiles = profiles-all = all');
   } catch (error) {
     console.error('Error:', error);
   } finally {
