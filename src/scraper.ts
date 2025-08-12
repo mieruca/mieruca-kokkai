@@ -82,4 +82,24 @@ export class DietMemberScraper {
       source: result.source,
     };
   }
+
+  /**
+   * Scrapes House of Representatives members with detailed profiles
+   * @param options - Options for profile scraping
+   * @returns Promise<HouseOfRepresentativesResult> - Complete data with profiles
+   */
+  async scrapeHouseOfRepresentativesWithProfiles(
+    options: {
+      includeProfiles?: boolean;
+      maxConcurrentProfiles?: number;
+      profileDelay?: number;
+      maxProfiles?: number;
+    } = {}
+  ): Promise<import('./scrapers/house-of-representatives/types').HouseOfRepresentativesResult> {
+    if (!this.browser) {
+      throw new Error('Browser not initialized. Call initialize() first.');
+    }
+
+    return this.houseOfRepresentativesScraper.scrapeHouseOfRepresentativesWithProfiles(options);
+  }
 }
