@@ -158,7 +158,7 @@ export class HouseOfRepresentativesScraper {
       includeProfiles = true,
       maxConcurrentProfiles = 2,
       profileDelay = 2000,
-      maxProfiles = 50,
+      maxProfiles = 10,
     } = options;
 
     // First, get the basic member data
@@ -179,10 +179,10 @@ export class HouseOfRepresentativesScraper {
       return result;
     }
 
-    // Limit the number of profiles to scrape for testing/demo purposes
+    // Limit the number of profiles to scrape (configurable)
     const membersToScrape = membersWithUrls.slice(0, maxProfiles);
     if (membersToScrape.length < membersWithUrls.length) {
-      console.log(`Limiting profile scraping to first ${maxProfiles} members for testing`);
+      console.log(`Limiting profile scraping to first ${maxProfiles} members (configurable)`);
     }
 
     // Scrape profiles with enhanced error handling
@@ -196,18 +196,9 @@ export class HouseOfRepresentativesScraper {
       // Continue with partial results rather than failing completely
     }
 
-    // Update the result with profile data
-    const membersWithProfiles = result.members.map((member) => {
-      const memberWithProfile = membersToScrape.find((m) => m.name === member.name);
-      return memberWithProfile?.profile
-        ? { ...member, profile: memberWithProfile.profile }
-        : member;
-    });
-
-    return {
-      ...result,
-      members: membersWithProfiles,
-    };
+    // Profiles are already attached to member objects by reference during scraping
+    // No need to remap - membersToScrape are references from result.members
+    return result;
   }
 
   private async extractMembersFromPage(page: Page): Promise<RawMemberData[]> {
@@ -534,6 +525,18 @@ export class HouseOfRepresentativesScraper {
       return null;
     }
 
+    // Validate URL scheme for security
+    try {
+      const url = new URL(profileUrl);
+      if (!['http:', 'https:'].includes(url.protocol)) {
+        console.warn(`Skipping non-http(s) profile URL: ${profileUrl}`);
+        return null;
+      }
+    } catch (_error) {
+      console.warn(`Invalid profile URL: ${profileUrl}`);
+      return null;
+    }
+
     const page = await this.newPage();
 
     try {
@@ -575,7 +578,7 @@ export class HouseOfRepresentativesScraper {
         const headingText = cleanText(await mainHeading.textContent());
         // Extract name and furigana from heading like "逢沢 一郎（あいさわ いちろう）"
         const nameMatch = headingText.match(/^([^(（]+)[（(]([^)）]+)[）)]$/);
-        if (nameMatch && nameMatch[1] && nameMatch[2]) {
+        if (nameMatch?.[1] && nameMatch[2]) {
           profile.fullName = nameMatch[1].trim();
           profile.furigana = nameMatch[2].trim();
         } else {
@@ -590,7 +593,7 @@ export class HouseOfRepresentativesScraper {
       // Extract election district and party information
       // Example: "小選挙区（岡山県第一区）選出、自由民主党・無所属の会"
       const electionMatch = contentText.match(/([^、]+選出)[、，]([^、]+)/);
-      if (electionMatch && electionMatch[1] && electionMatch[2]) {
+      if (electionMatch?.[1] && electionMatch[2]) {
         profile.electionDistrict = electionMatch[1].trim();
         profile.partyAffiliation = electionMatch[2].trim();
       }
@@ -598,12 +601,12 @@ export class HouseOfRepresentativesScraper {
       // Extract birth information
       // Example: "昭和二十九年六月岡山県岡山市に生まれる"
       const birthMatch = contentText.match(/(昭和|平成|令和)([^年]+年[^に]+に生まれる)/);
-      if (birthMatch && birthMatch[1] && birthMatch[2]) {
+      if (birthMatch?.[1] && birthMatch[2]) {
         profile.birthDate = birthMatch[1] + birthMatch[2];
 
         // Extract birth place more specifically
         const birthPlaceMatch = birthMatch[2].match(/年[^に]*([^に]+)に生まれる/);
-        if (birthPlaceMatch && birthPlaceMatch[1]) {
+        if (birthPlaceMatch?.[1]) {
           profile.birthPlace = birthPlaceMatch[1].trim();
         }
       }
@@ -635,7 +638,7 @@ export class HouseOfRepresentativesScraper {
 
           // Extract university name specifically
           const uniMatch = firstEducation.match(/([^、，]+大学)/);
-          if (uniMatch && uniMatch[1]) {
+          if (uniMatch?.[1]) {
             profile.university = uniMatch[1];
           }
         }
@@ -686,12 +689,12 @@ export class HouseOfRepresentativesScraper {
       // Extract election history and count
       // Example: "当選十三回（38 39 40 41 42 43 44 45 46 47 48 49 50）"
       const electionHistoryMatch = contentText.match(/当選([^回]+回)[（(]([^）)]+)[）)]/);
-      if (electionHistoryMatch && electionHistoryMatch[1] && electionHistoryMatch[2]) {
+      if (electionHistoryMatch?.[1] && electionHistoryMatch[2]) {
         profile.electionHistory = `当選${electionHistoryMatch[1]}`;
 
         // Extract election count as number
         const countMatch = electionHistoryMatch[1].match(/([\d一二三四五六七八九十]+)回/);
-        if (countMatch && countMatch[1]) {
+        if (countMatch?.[1]) {
           profile.electionCount = this.convertJapaneseNumber(countMatch[1]);
         }
 
@@ -749,7 +752,7 @@ export class HouseOfRepresentativesScraper {
 
       // Add date information if available
       const dateMatch = contentText.match(/(令和\d+年\d+月現在)/);
-      if (dateMatch && dateMatch[1]) {
+      if (dateMatch?.[1]) {
         additionalInfo['情報更新日'] = dateMatch[1];
       }
 
@@ -774,7 +777,11 @@ export class HouseOfRepresentativesScraper {
     members: HouseOfRepresentativesMember[],
     options: { maxConcurrent?: number; delay?: number } = {}
   ): Promise<void> {
-    const { maxConcurrent = 3, delay = 1000 } = options;
+    let { maxConcurrent = 3, delay = 1000 } = options;
+
+    // Normalize inputs to prevent infinite loops and negative delays
+    maxConcurrent = Math.max(1, Math.floor(Number(maxConcurrent) || 1));
+    delay = Math.max(0, Math.floor(Number(delay) || 0));
 
     if (!this.browser) {
       throw new Error('Browser not initialized');
