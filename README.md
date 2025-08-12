@@ -12,13 +12,36 @@ npx playwright install chromium
 ## Usage
 
 ```bash
-# Development mode
+# Development mode (basic member data only)
 npm run dev
+
+# Development mode with profile scraping (limited to 10 profiles)
+npm run dev -- --profiles
+
+# Development mode with custom profile limit
+npm run dev -- --profiles --max-profiles 25
 
 # Build and run
 npm run build
 npm start
+
+# Run with profiles in production
+npm start -- --profiles --max-profiles 50
 ```
+
+### Profile Scraping
+
+The scraper now supports extracting detailed profile information from individual member pages, including:
+
+- Birth date and place
+- Education background
+- Current and previous occupations
+- Committee memberships
+- Contact information (website, email, office details)
+- Biography
+- Additional metadata
+
+Profile scraping is rate-limited and includes comprehensive error handling to ensure reliable operation.
 
 ## Development Tools
 

@@ -4,6 +4,7 @@ import { HOUSE_OF_REPRESENTATIVES_CONFIG } from './constants';
 import type {
   HouseOfRepresentativesMember,
   HouseOfRepresentativesResult,
+  MemberProfile,
   RawMemberData,
 } from './types';
 
@@ -137,6 +138,75 @@ export class HouseOfRepresentativesScraper {
       members: processedMembers,
       scrapedAt: new Date().toISOString(),
       source: 'house-of-representatives-list',
+    };
+  }
+
+  /**
+   * Scrapes House of Representatives members with their detailed profiles
+   * @param options - Scraping options for profile collection
+   * @returns Promise<HouseOfRepresentativesResult> - Complete member data with profiles
+   */
+  async scrapeHouseOfRepresentativesWithProfiles(
+    options: {
+      includeProfiles?: boolean;
+      maxConcurrentProfiles?: number;
+      profileDelay?: number;
+      maxProfiles?: number;
+    } = {}
+  ): Promise<HouseOfRepresentativesResult> {
+    const {
+      includeProfiles = true,
+      maxConcurrentProfiles = 2,
+      profileDelay = 2000,
+      maxProfiles = 50,
+    } = options;
+
+    // First, get the basic member data
+    console.log('Starting House of Representatives scraping...');
+    const result = await this.scrapeAllPages();
+
+    if (!includeProfiles) {
+      console.log('Profile scraping disabled. Returning basic member data only.');
+      return result;
+    }
+
+    // Filter members with profile URLs
+    const membersWithUrls = result.members.filter((m) => m.profileUrl);
+    console.log(`Found ${membersWithUrls.length} members with profile URLs`);
+
+    if (membersWithUrls.length === 0) {
+      console.log('No members with profile URLs found. Returning basic data.');
+      return result;
+    }
+
+    // Limit the number of profiles to scrape for testing/demo purposes
+    const membersToScrape = membersWithUrls.slice(0, maxProfiles);
+    if (membersToScrape.length < membersWithUrls.length) {
+      console.log(`Limiting profile scraping to first ${maxProfiles} members for testing`);
+    }
+
+    // Scrape profiles with enhanced error handling
+    try {
+      await this.scrapeMultipleProfiles(membersToScrape, {
+        maxConcurrent: maxConcurrentProfiles,
+        delay: profileDelay,
+      });
+    } catch (error) {
+      console.error('Error during profile scraping:', error);
+      // Continue with partial results rather than failing completely
+    }
+
+    // Update the result with profile data
+    const membersWithProfiles = result.members.map((member) => {
+      const memberWithProfile = membersToScrape.find((m) => m.name === member.name);
+      return memberWithProfile?.profile
+        ? { ...member, profile: memberWithProfile.profile }
+        : member;
+    });
+
+    return {
+      ...result,
+      members: membersWithProfiles,
     };
   }
 
@@ -442,5 +512,302 @@ export class HouseOfRepresentativesScraper {
         prefecture: rawInfo,
       },
     };
+  }
+
+  /**
+   * Scrapes detailed profile information from a member's profile page
+   * @param profileUrl - The URL of the member's profile page
+   * @returns Promise<MemberProfile | null> - The member's profile data or null if scraping fails
+   */
+  async scrapeProfile(profileUrl: string): Promise<MemberProfile | null> {
+    if (!profileUrl || !this.browser) {
+      return null;
+    }
+
+    const page = await this.newPage();
+
+    try {
+      console.log(`Scraping profile: ${profileUrl}`);
+      await page.goto(profileUrl, { waitUntil: 'networkidle', timeout: 10000 });
+
+      const profile = await this.extractProfileFromPage(page);
+      return profile;
+    } catch (error) {
+      console.error(`Failed to scrape profile ${profileUrl}:`, error);
+      return null;
+    } finally {
+      await page.close();
+    }
+  }
+
+  /**
+   * Extracts profile information from the current page
+   * @param page - The Playwright page object
+   * @returns Promise<MemberProfile | null> - Extracted profile data
+   */
+  private async extractProfileFromPage(page: Page): Promise<MemberProfile | null> {
+    return page.evaluate(() => {
+      const profile: MemberProfile = {};
+
+      // Helper function to clean text
+      function cleanText(text: string | null | undefined): string {
+        return (
+          text
+            ?.trim()
+            .replace(/\s+/g, ' ')
+            .replace(/[　\u3000]/g, ' ') || ''
+        );
+      }
+
+      // Helper function to extract data from table-like structures
+      function extractFromTable(): Record<string, string> {
+        const data: Record<string, string> = {};
+        const rows = document.querySelectorAll('table tr, .profile-row, .data-row');
+
+        rows.forEach((row) => {
+          const cells = row.querySelectorAll('td, th, .label, .value');
+          if (cells.length >= 2) {
+            const label = cleanText(cells[0]?.textContent);
+            const value = cleanText(cells[1]?.textContent);
+            if (label && value) {
+              data[label] = value;
+            }
+          }
+        });
+
+        return data;
+      }
+
+      // Helper function to extract from definition lists
+      function extractFromDL(): Record<string, string> {
+        const data: Record<string, string> = {};
+        const dls = document.querySelectorAll('dl');
+
+        dls.forEach((dl) => {
+          const dts = dl.querySelectorAll('dt');
+          const dds = dl.querySelectorAll('dd');
+
+          for (let i = 0; i < Math.min(dts.length, dds.length); i++) {
+            const label = cleanText(dts[i]?.textContent);
+            const value = cleanText(dds[i]?.textContent);
+            if (label && value) {
+              data[label] = value;
+            }
+          }
+        });
+
+        return data;
+      }
+
+      // Extract from various page structures
+      const tableData = extractFromTable();
+      const dlData = extractFromDL();
+      const allData = { ...tableData, ...dlData };
+
+      // Parse birth date from various formats
+      const birthDatePatterns = ['生年月日', '誕生日', '生まれ', '年齢'];
+      for (const pattern of birthDatePatterns) {
+        for (const [key, value] of Object.entries(allData)) {
+          if (key.includes(pattern) && value) {
+            // Extract date pattern like "昭和XX年XX月XX日" or "19XX年XX月XX日"
+            const dateMatch = value.match(
+              /(?:昭和|平成|令和)?(?:(\d{1,2})|(\d{4}))年(\d{1,2})月(\d{1,2})日/
+            );
+            if (dateMatch) {
+              profile.birthDate = value;
+              break;
+            }
+          }
+        }
+        if (profile.birthDate) break;
+      }
+
+      // Parse birth place
+      const birthPlacePatterns = ['出身地', '生まれ', '出身'];
+      for (const pattern of birthPlacePatterns) {
+        for (const [key, value] of Object.entries(allData)) {
+          if (key.includes(pattern) && value && !value.includes('年') && !value.includes('月')) {
+            profile.birthPlace = value;
+            break;
+          }
+        }
+        if (profile.birthPlace) break;
+      }
+
+      // Parse education
+      const educationPatterns = ['学歴', '卒業', '大学', '学校'];
+      for (const pattern of educationPatterns) {
+        for (const [key, value] of Object.entries(allData)) {
+          if (key.includes(pattern) && value) {
+            profile.education = value;
+            break;
+          }
+        }
+        if (profile.education) break;
+      }
+
+      // Parse occupation
+      const occupationPatterns = ['職業', '現職', '前職'];
+      for (const pattern of occupationPatterns) {
+        for (const [key, value] of Object.entries(allData)) {
+          if (key.includes(pattern) && value) {
+            if (pattern === '前職') {
+              profile.previousOccupation = value
+                .split(/[、，,]/)
+                .map((s) => s.trim())
+                .filter((s) => s);
+            } else {
+              profile.occupation = value;
+            }
+            break;
+          }
+        }
+      }
+
+      // Parse committees
+      const committeePatterns = ['委員会', '所属委員会', '委員'];
+      for (const pattern of committeePatterns) {
+        for (const [key, value] of Object.entries(allData)) {
+          if (key.includes(pattern) && value) {
+            profile.committees = value
+              .split(/[、，,]/)
+              .map((s) => s.trim())
+              .filter((s) => s);
+            break;
+          }
+        }
+        if (profile.committees) break;
+      }
+
+      // Parse contact information
+      const websiteLink = document.querySelector('a[href^="http"]');
+      if (websiteLink) {
+        const href = websiteLink.getAttribute('href');
+        if (href) {
+          profile.website = href;
+        }
+      }
+
+      // Parse email
+      const emailLink = document.querySelector('a[href^="mailto:"]');
+      if (emailLink) {
+        const href = emailLink.getAttribute('href');
+        if (href) {
+          profile.email = href.replace('mailto:', '');
+        }
+      }
+
+      // Parse office information
+      const officePatterns = ['事務所', '連絡先', '住所', '電話', 'TEL', 'FAX'];
+      const officeData: { address?: string; phone?: string; fax?: string } = {};
+
+      for (const pattern of officePatterns) {
+        for (const [key, value] of Object.entries(allData)) {
+          if (key.includes(pattern) && value) {
+            if (key.includes('住所')) {
+              officeData.address = value;
+            } else if (key.includes('電話') || key.includes('TEL')) {
+              officeData.phone = value;
+            } else if (key.includes('FAX')) {
+              officeData.fax = value;
+            }
+          }
+        }
+      }
+
+      if (Object.keys(officeData).length > 0) {
+        profile.office = officeData;
+      }
+
+      // Extract biography from paragraph text
+      const paragraphs = document.querySelectorAll('p');
+      const biographyTexts: string[] = [];
+
+      paragraphs.forEach((p) => {
+        const text = cleanText(p.textContent);
+        if (text.length > 50 && !text.includes('委員会') && !text.includes('事務所')) {
+          biographyTexts.push(text);
+        }
+      });
+
+      if (biographyTexts.length > 0) {
+        profile.biography = biographyTexts.join('\n');
+      }
+
+      // Store additional information not captured above
+      const additionalInfo: Record<string, string> = {};
+      for (const [key, value] of Object.entries(allData)) {
+        if (
+          !key.includes('生年月日') &&
+          !key.includes('出身') &&
+          !key.includes('学歴') &&
+          !key.includes('職業') &&
+          !key.includes('委員会') &&
+          !key.includes('事務所') &&
+          !key.includes('連絡先') &&
+          !key.includes('住所') &&
+          !key.includes('電話') &&
+          !key.includes('FAX') &&
+          value
+        ) {
+          additionalInfo[key] = value;
+        }
+      }
+
+      if (Object.keys(additionalInfo).length > 0) {
+        profile.additionalInfo = additionalInfo;
+      }
+
+      return Object.keys(profile).length > 0 ? profile : null;
+    });
+  }
+
+  /**
+   * Scrapes profiles for multiple members with rate limiting
+   * @param members - Array of members with profileUrl
+   * @param options - Scraping options
+   * @returns Promise<void>
+   */
+  async scrapeMultipleProfiles(
+    members: HouseOfRepresentativesMember[],
+    options: { maxConcurrent?: number; delay?: number } = {}
+  ): Promise<void> {
+    const { maxConcurrent = 3, delay = 1000 } = options;
+
+    if (!this.browser) {
+      throw new Error('Browser not initialized');
+    }
+
+    const membersWithProfiles = members.filter((m) => m.profileUrl);
+    console.log(`Scraping profiles for ${membersWithProfiles.length} members...`);
+
+    // Process in batches to avoid overwhelming the server
+    for (let i = 0; i < membersWithProfiles.length; i += maxConcurrent) {
+      const batch = membersWithProfiles.slice(i, i + maxConcurrent);
+
+      const promises = batch.map(async (member) => {
+        if (member.profileUrl) {
+          const profile = await this.scrapeProfile(member.profileUrl);
+          if (profile) {
+            member.profile = profile;
+            console.log(`✓ Scraped profile for ${member.name}`);
+          } else {
+            console.log(`✗ Failed to scrape profile for ${member.name}`);
+          }
+        }
+      });
+
+      await Promise.all(promises);
+
+      // Add delay between batches
+      if (i + maxConcurrent < membersWithProfiles.length && delay > 0) {
+        console.log(`Waiting ${delay}ms before next batch...`);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+
+    console.log(
+      `Completed profile scraping. Success rate: ${members.filter((m) => m.profile).length}/${membersWithProfiles.length}`
+    );
   }
 }

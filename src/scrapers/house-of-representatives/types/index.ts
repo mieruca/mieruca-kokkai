@@ -15,6 +15,25 @@ export interface HouseOfRepresentativesMember {
   profileUrl?: string;
   electionCount?: ElectionCount;
   election: Election;
+  profile?: MemberProfile;
+}
+
+export interface MemberProfile {
+  birthDate?: string;
+  birthPlace?: string;
+  education?: string;
+  occupation?: string;
+  previousOccupation?: string[];
+  committees?: string[];
+  website?: string;
+  email?: string;
+  office?: {
+    address?: string;
+    phone?: string;
+    fax?: string;
+  };
+  biography?: string;
+  additionalInfo?: Record<string, string>;
 }
 
 export interface HouseOfRepresentativesResult {
