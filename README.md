@@ -68,6 +68,29 @@ The scraper now supports extracting detailed profile information from individual
 
 Profile scraping is rate-limited and includes comprehensive error handling to ensure reliable operation. The `all-profiles` script will scrape profiles for all ~465 House of Representatives members and may take 30+ minutes to complete.
 
+## Output Files
+
+All scraped data is stored in the `out/` directory with different files for different scraping modes:
+
+- `out/diet-members.json` - Basic member data only (from `basic` script)
+- `out/diet-members-with-profiles.json` - Limited profile data (from `profiles` script)
+- `out/diet-members-with-all-profiles.json` - Complete profile data (from `all-profiles` script)
+
+### File Structure
+
+```
+out/
+├── diet-members.json                    # Basic data (~464 members)
+├── diet-members-with-profiles.json     # Limited profiles (default: 10 members)
+├── diet-members-with-all-profiles.json # All profiles (~465 members)
+└── .gitkeep                            # Ensures directory is tracked
+```
+
+Each file contains:
+- **Metadata**: `scrapedAt` timestamp, `source` URL
+- **Members array**: Structured data for each Diet member
+- **Cache-friendly**: Files are used for intelligent caching with 24-hour expiration
+
 ## Development Tools
 
 This project uses:
