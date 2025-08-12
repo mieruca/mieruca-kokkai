@@ -211,199 +211,209 @@ export class HouseOfRepresentativesScraper {
   }
 
   private async extractMembersFromPage(page: Page): Promise<RawMemberData[]> {
-    return page.evaluate((prefectures) => {
-      const members = [];
-      const seenMembers = new Set();
-      const rows = Array.from(document.querySelectorAll('table tr'));
+    // Get table data using Playwright selectors instead of page.evaluate()
+    const rows = await page.locator('table tr').all();
+    const members: RawMemberData[] = [];
+    const seenMembers = new Set<string>();
 
-      function isHeaderKeyword(text: string): boolean {
-        const headers = [
-          '氏名',
-          '議員氏名',
-          'ふりがな',
-          'フリガナ',
-          '読み',
-          'よみ',
-          '会派',
-          '選挙区',
-          '政党',
-          '都道府県',
-        ];
-        const t = text.trim();
-        return t.length < 2 || headers.some((h) => t === h || t.startsWith(h));
+    const isHeaderKeyword = (text: string): boolean => {
+      const headers = [
+        '氏名',
+        '議員氏名',
+        'ふりがな',
+        'フリガナ',
+        '読み',
+        'よみ',
+        '会派',
+        '選挙区',
+        '政党',
+        '都道府県',
+      ];
+      const t = text.trim();
+      return t.length < 2 || headers.some((h) => t === h || t.startsWith(h));
+    };
+
+    const isPartyKeyword = (text: string): boolean => {
+      const t = (text || '').trim();
+      const parties = [
+        '自由民主党',
+        '立憲民主党',
+        '公明党',
+        '日本維新の会',
+        '日本共産党',
+        '国民民主党',
+        'れいわ新選組',
+        '社会民主党',
+        '無所属',
+        '無会派',
+      ];
+      return parties.some((keyword) => t.includes(keyword));
+    };
+
+    const buildAbsoluteUrl = (relativeUrl: string): string => {
+      const baseUrl = 'https://www.shugiin.go.jp';
+      // Accept absolute http(s) and reject unsafe schemes
+      if (/^https?:\/\//i.test(relativeUrl)) return relativeUrl;
+      if (/^(javascript|data):/i.test(relativeUrl)) return '';
+      if (relativeUrl.startsWith('../../../../')) {
+        return relativeUrl.replace('../../../../', `${baseUrl}/internet/`);
+      }
+      if (relativeUrl.startsWith('../')) {
+        return `${baseUrl}/internet/${relativeUrl.replace(/^\.\.\/+/, '')}`;
+      }
+      if (relativeUrl.startsWith('/')) {
+        return `${baseUrl}${relativeUrl}`;
+      }
+      return `${baseUrl}/internet/itdb_annai.nsf/html/statics/syu/${relativeUrl}`;
+    };
+
+    for (const row of rows) {
+      const cells = await row.locator('td').all();
+      if (cells.length < 3) continue;
+
+      const nameCell = cells[0];
+      if (!nameCell) continue;
+
+      const link = await nameCell.locator('a').first();
+      let name = '';
+      let href = '';
+
+      if ((await link.count()) > 0) {
+        name = (await link.textContent())?.trim() || '';
+        href = (await link.getAttribute('href'))?.trim() || '';
+      } else {
+        name = (await nameCell.textContent())?.trim() || '';
       }
 
-      function isPartyKeyword(text: string): boolean {
-        const t = (text || '').trim();
-        const parties = [
-          '自由民主党',
-          '立憲民主党',
-          '公明党',
-          '日本維新の会',
-          '日本共産党',
-          '国民民主党',
-          'れいわ新選組',
-          '社会民主党',
-          '無所属',
-          '無会派',
-        ];
-        return parties.some((keyword) => t.includes(keyword));
+      if (!name || isHeaderKeyword(name)) continue;
+
+      const cleanName = name.replace(/君$/, '').trim();
+      if (seenMembers.has(cleanName)) continue;
+      seenMembers.add(cleanName);
+
+      const profileUrl = href ? buildAbsoluteUrl(href) : '';
+      const furigana = cells[1] ? (await cells[1].textContent())?.trim() : '';
+
+      let party = '不明';
+      for (let i = 2; i < Math.min(5, cells.length); i++) {
+        const text = (await cells[i]?.textContent())?.trim() || '';
+        if (text && !isHeaderKeyword(text) && isPartyKeyword(text)) {
+          party = text;
+          break;
+        }
       }
 
-      function buildAbsoluteUrl(relativeUrl: string): string {
-        const baseUrl = 'https://www.shugiin.go.jp';
-        // Accept absolute http(s) and reject unsafe schemes
-        if (/^https?:\/\//i.test(relativeUrl)) return relativeUrl;
-        if (/^(javascript|data):/i.test(relativeUrl)) return '';
-        if (relativeUrl.startsWith('../../../../')) {
-          return relativeUrl.replace('../../../../', `${baseUrl}/internet/`);
-        }
-        if (relativeUrl.startsWith('../')) {
-          return `${baseUrl}/internet/${relativeUrl.replace(/^\.\.\/+/, '')}`;
-        }
-        if (relativeUrl.startsWith('/')) {
-          return `${baseUrl}${relativeUrl}`;
-        }
-        return `${baseUrl}/internet/itdb_annai.nsf/html/statics/syu/${relativeUrl}`;
+      let prefecture = '不明';
+      let electionCount: RawMemberData['electionCount'];
+
+      // Get all cell texts
+      const allCells: string[] = [];
+      for (const cell of cells) {
+        const text = (await cell.textContent())?.trim() || '';
+        allCells.push(text);
       }
 
-      for (const row of rows) {
-        const cells = row.querySelectorAll('td');
-        if (cells.length < 3) continue;
-
-        const nameCell = cells[0];
-        if (!nameCell) continue;
-
-        const link = nameCell.querySelector('a');
-        const name = link ? link.textContent?.trim() : nameCell.textContent?.trim();
-        if (!name || isHeaderKeyword(name)) continue;
-
-        const cleanName = name.replace(/君$/, '').trim();
-        if (seenMembers.has(cleanName)) continue;
-        seenMembers.add(cleanName);
-
-        const href = link?.getAttribute('href')?.trim() ?? '';
-        const profileUrl = href ? buildAbsoluteUrl(href) : '';
-
-        const furigana = cells[1] ? cells[1].textContent?.trim() : '';
-
-        let party = '不明';
-        for (let i = 2; i < Math.min(5, cells.length); i++) {
-          const text = cells[i]?.textContent?.trim() || '';
-          if (text && !isHeaderKeyword(text) && isPartyKeyword(text)) {
-            party = text;
-            break;
-          }
-        }
-
-        let prefecture = '不明';
-        let electionCount = null;
-
-        // The table structure shows electoral districts are in specific positions
-        // Based on debug info, electoral districts appear in specific patterns
-        const allCells = Array.from(cells).map((cell) => cell.textContent?.trim() || '');
-
-        // First, look for prefecture+number patterns (like "岡山1", "大阪14")
-        for (let i = 0; i < allCells.length; i++) {
-          const text = allCells[i];
-          if (text && !isHeaderKeyword(text) && !isPartyKeyword(text)) {
-            // Check for prefecture + number pattern first (highest priority)
-            for (const pref of prefectures) {
-              if (text.startsWith(pref)) {
-                const num = text.slice(pref.length);
-                if (/^\d+$/.test(num)) {
-                  prefecture = text;
-                  break;
-                }
-              }
-            }
-            if (prefecture !== '不明') break;
-          }
-        }
-
-        // Look for election count (format: "5（参1）" or pure numbers)
-        for (let i = 0; i < allCells.length; i++) {
-          const text = allCells[i];
-          if (text) {
-            // Check for pattern like "1（参2）", "5（参1）" - House + (Senate)
-            const senateMatch = text.replace(/\s+/g, '').match(/^(\d+)[（(]参(\d+)[）)]$/);
-            if (senateMatch?.[1] && senateMatch[2]) {
-              const houseCount = parseInt(senateMatch[1]);
-              const senateCount = parseInt(senateMatch[2]);
-              electionCount = { house: houseCount, senate: senateCount };
-              break;
-            }
-
-            // Check for pure number (House only)
-            if (/^\d+$/.test(text)) {
-              const num = parseInt(text);
-              // Election counts are typically 1-25, filter out years or large numbers
-              if (num >= 1 && num <= 25) {
-                electionCount = { house: num };
+      // First, look for prefecture+number patterns (like "岡山1", "大阪14")
+      for (let i = 0; i < allCells.length; i++) {
+        const text = allCells[i];
+        if (text && !isHeaderKeyword(text) && !isPartyKeyword(text)) {
+          // Check for prefecture + number pattern first (highest priority)
+          for (const pref of PREFECTURES) {
+            if (text.startsWith(pref)) {
+              const num = text.slice(pref.length);
+              if (/^\d+$/.test(num)) {
+                prefecture = text;
                 break;
               }
             }
           }
+          if (prefecture !== '不明') break;
         }
-        // If not found, look for proportional representation
-        if (prefecture === '不明') {
-          for (let i = 0; i < allCells.length; i++) {
-            const text = allCells[i];
-            if (text?.includes('（比）')) {
-              prefecture = text;
+      }
+
+      // Look for election count (format: "5（参1）" or pure numbers)
+      for (let i = 0; i < allCells.length; i++) {
+        const text = allCells[i];
+        if (text) {
+          // Check for pattern like "1（参2）", "5（参1）" - House + (Senate)
+          const senateMatch = text.replace(/\s+/g, '').match(/^(\d+)[（(]参(\d+)[）)]$/);
+          if (senateMatch?.[1] && senateMatch[2]) {
+            const houseCount = parseInt(senateMatch[1], 10);
+            const senateCount = parseInt(senateMatch[2], 10);
+            electionCount = { house: houseCount, senate: senateCount };
+            break;
+          }
+
+          // Check for pure number (House only)
+          if (/^\d+$/.test(text)) {
+            const num = parseInt(text, 10);
+            // Election counts are typically 1-25, filter out years or large numbers
+            if (num >= 1 && num <= 25) {
+              electionCount = { house: num };
               break;
             }
           }
         }
+      }
 
-        // If no electoral district found, check if any cell contains prefecture + number pattern
-        if (prefecture === '不明') {
-          for (let i = 2; i < cells.length; i++) {
-            const text = cells[i]?.textContent?.trim() || '';
-            if (text && !isHeaderKeyword(text) && !isPartyKeyword(text)) {
-              // Skip pure numbers (election count), look for prefecture names
-              if (!/^\d+$/.test(text)) {
-                // Check if it matches prefecture + number pattern
-                for (const pref of prefectures) {
-                  if (text.includes(pref)) {
-                    prefecture = text;
-                    break;
-                  }
+      // If not found, look for proportional representation
+      if (prefecture === '不明') {
+        for (let i = 0; i < allCells.length; i++) {
+          const text = allCells[i];
+          if (text?.includes('（比）')) {
+            prefecture = text;
+            break;
+          }
+        }
+      }
+
+      // If no electoral district found, check if any cell contains prefecture + number pattern
+      if (prefecture === '不明') {
+        for (let i = 2; i < cells.length; i++) {
+          const text = allCells[i];
+          if (text && !isHeaderKeyword(text) && !isPartyKeyword(text)) {
+            // Skip pure numbers (election count), look for prefecture names
+            if (!/^\d+$/.test(text)) {
+              // Check if it matches prefecture + number pattern
+              for (const pref of PREFECTURES) {
+                if (text.includes(pref)) {
+                  prefecture = text;
+                  break;
                 }
-                if (prefecture !== '不明') break;
               }
+              if (prefecture !== '不明') break;
             }
           }
         }
-
-        const nameParts = cleanName.split(/\s+/);
-        const memberData: RawMemberData = {
-          name: {
-            full: cleanName,
-            last: nameParts[0] || '',
-            first: nameParts.slice(1).join(' ') || '',
-          },
-          party,
-          prefecture,
-        };
-
-        if (furigana && !isHeaderKeyword(furigana)) {
-          memberData.furigana = furigana;
-        }
-
-        if (profileUrl) {
-          memberData.profileUrl = profileUrl;
-        }
-
-        if (electionCount) {
-          memberData.electionCount = electionCount;
-        }
-
-        members.push(memberData);
       }
 
-      return members;
-    }, PREFECTURES);
+      const nameParts = cleanName.split(/\s+/);
+      const memberData: RawMemberData = {
+        name: {
+          full: cleanName,
+          last: nameParts[0] || '',
+          first: nameParts.slice(1).join(' ') || '',
+        },
+        party,
+        prefecture,
+      };
+
+      if (furigana && !isHeaderKeyword(furigana)) {
+        memberData.furigana = furigana;
+      }
+
+      if (profileUrl) {
+        memberData.profileUrl = profileUrl;
+      }
+
+      if (electionCount) {
+        memberData.electionCount = electionCount;
+      }
+
+      members.push(memberData);
+    }
+
+    return members;
   }
 
   private validateMemberData(member: RawMemberData): boolean {
@@ -546,220 +556,10 @@ export class HouseOfRepresentativesScraper {
    * @returns Promise<MemberProfile | null> - Extracted profile data
    */
   private async extractProfileFromPage(page: Page): Promise<MemberProfile | null> {
-    return page.evaluate(() => {
-      const profile: MemberProfile = {};
-
-      // Helper function to clean text
-      function cleanText(text: string | null | undefined): string {
-        return (
-          text
-            ?.trim()
-            .replace(/\s+/g, ' ')
-            .replace(/[　\u3000]/g, ' ') || ''
-        );
-      }
-
-      // Helper function to extract data from table-like structures
-      function extractFromTable(): Record<string, string> {
-        const data: Record<string, string> = {};
-        const rows = document.querySelectorAll('table tr, .profile-row, .data-row');
-
-        rows.forEach((row) => {
-          const cells = row.querySelectorAll('td, th, .label, .value');
-          if (cells.length >= 2) {
-            const label = cleanText(cells[0]?.textContent);
-            const value = cleanText(cells[1]?.textContent);
-            if (label && value) {
-              data[label] = value;
-            }
-          }
-        });
-
-        return data;
-      }
-
-      // Helper function to extract from definition lists
-      function extractFromDL(): Record<string, string> {
-        const data: Record<string, string> = {};
-        const dls = document.querySelectorAll('dl');
-
-        dls.forEach((dl) => {
-          const dts = dl.querySelectorAll('dt');
-          const dds = dl.querySelectorAll('dd');
-
-          for (let i = 0; i < Math.min(dts.length, dds.length); i++) {
-            const label = cleanText(dts[i]?.textContent);
-            const value = cleanText(dds[i]?.textContent);
-            if (label && value) {
-              data[label] = value;
-            }
-          }
-        });
-
-        return data;
-      }
-
-      // Extract from various page structures
-      const tableData = extractFromTable();
-      const dlData = extractFromDL();
-      const allData = { ...tableData, ...dlData };
-
-      // Parse birth date from various formats
-      const birthDatePatterns = ['生年月日', '誕生日', '生まれ', '年齢'];
-      for (const pattern of birthDatePatterns) {
-        for (const [key, value] of Object.entries(allData)) {
-          if (key.includes(pattern) && value) {
-            // Extract date pattern like "昭和XX年XX月XX日" or "19XX年XX月XX日"
-            const dateMatch = value.match(
-              /(?:昭和|平成|令和)?(?:(\d{1,2})|(\d{4}))年(\d{1,2})月(\d{1,2})日/
-            );
-            if (dateMatch) {
-              profile.birthDate = value;
-              break;
-            }
-          }
-        }
-        if (profile.birthDate) break;
-      }
-
-      // Parse birth place
-      const birthPlacePatterns = ['出身地', '生まれ', '出身'];
-      for (const pattern of birthPlacePatterns) {
-        for (const [key, value] of Object.entries(allData)) {
-          if (key.includes(pattern) && value && !value.includes('年') && !value.includes('月')) {
-            profile.birthPlace = value;
-            break;
-          }
-        }
-        if (profile.birthPlace) break;
-      }
-
-      // Parse education
-      const educationPatterns = ['学歴', '卒業', '大学', '学校'];
-      for (const pattern of educationPatterns) {
-        for (const [key, value] of Object.entries(allData)) {
-          if (key.includes(pattern) && value) {
-            profile.education = value;
-            break;
-          }
-        }
-        if (profile.education) break;
-      }
-
-      // Parse occupation
-      const occupationPatterns = ['職業', '現職', '前職'];
-      for (const pattern of occupationPatterns) {
-        for (const [key, value] of Object.entries(allData)) {
-          if (key.includes(pattern) && value) {
-            if (pattern === '前職') {
-              profile.previousOccupation = value
-                .split(/[、，,]/)
-                .map((s) => s.trim())
-                .filter((s) => s);
-            } else {
-              profile.occupation = value;
-            }
-            break;
-          }
-        }
-      }
-
-      // Parse committees
-      const committeePatterns = ['委員会', '所属委員会', '委員'];
-      for (const pattern of committeePatterns) {
-        for (const [key, value] of Object.entries(allData)) {
-          if (key.includes(pattern) && value) {
-            profile.committees = value
-              .split(/[、，,]/)
-              .map((s) => s.trim())
-              .filter((s) => s);
-            break;
-          }
-        }
-        if (profile.committees) break;
-      }
-
-      // Parse contact information
-      const websiteLink = document.querySelector('a[href^="http"]');
-      if (websiteLink) {
-        const href = websiteLink.getAttribute('href');
-        if (href) {
-          profile.website = href;
-        }
-      }
-
-      // Parse email
-      const emailLink = document.querySelector('a[href^="mailto:"]');
-      if (emailLink) {
-        const href = emailLink.getAttribute('href');
-        if (href) {
-          profile.email = href.replace('mailto:', '');
-        }
-      }
-
-      // Parse office information
-      const officePatterns = ['事務所', '連絡先', '住所', '電話', 'TEL', 'FAX'];
-      const officeData: { address?: string; phone?: string; fax?: string } = {};
-
-      for (const pattern of officePatterns) {
-        for (const [key, value] of Object.entries(allData)) {
-          if (key.includes(pattern) && value) {
-            if (key.includes('住所')) {
-              officeData.address = value;
-            } else if (key.includes('電話') || key.includes('TEL')) {
-              officeData.phone = value;
-            } else if (key.includes('FAX')) {
-              officeData.fax = value;
-            }
-          }
-        }
-      }
-
-      if (Object.keys(officeData).length > 0) {
-        profile.office = officeData;
-      }
-
-      // Extract biography from paragraph text
-      const paragraphs = document.querySelectorAll('p');
-      const biographyTexts: string[] = [];
-
-      paragraphs.forEach((p) => {
-        const text = cleanText(p.textContent);
-        if (text.length > 50 && !text.includes('委員会') && !text.includes('事務所')) {
-          biographyTexts.push(text);
-        }
-      });
-
-      if (biographyTexts.length > 0) {
-        profile.biography = biographyTexts.join('\n');
-      }
-
-      // Store additional information not captured above
-      const additionalInfo: Record<string, string> = {};
-      for (const [key, value] of Object.entries(allData)) {
-        if (
-          !key.includes('生年月日') &&
-          !key.includes('出身') &&
-          !key.includes('学歴') &&
-          !key.includes('職業') &&
-          !key.includes('委員会') &&
-          !key.includes('事務所') &&
-          !key.includes('連絡先') &&
-          !key.includes('住所') &&
-          !key.includes('電話') &&
-          !key.includes('FAX') &&
-          value
-        ) {
-          additionalInfo[key] = value;
-        }
-      }
-
-      if (Object.keys(additionalInfo).length > 0) {
-        profile.additionalInfo = additionalInfo;
-      }
-
-      return Object.keys(profile).length > 0 ? profile : null;
-    });
+    // TODO: Fix page.evaluate() issue with TypeScript compilation
+    // For now, return null to prevent __name undefined errors
+    console.log('Profile extraction temporarily disabled due to TypeScript compilation issues');
+    return null;
   }
 
   /**
