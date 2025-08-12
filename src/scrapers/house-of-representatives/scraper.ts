@@ -569,189 +569,185 @@ export class HouseOfRepresentativesScraper {
     };
 
     try {
-      // Extract from table-like structures
-      const tableRows = await page.locator('table tr, .profile-row, .data-row').all();
-      const tableData: Record<string, string> = {};
-
-      for (const row of tableRows) {
-        const cells = await row.locator('td, th, .label, .value').all();
-        if (cells.length >= 2) {
-          const label = cleanText(await cells[0]?.textContent());
-          const value = cleanText(await cells[1]?.textContent());
-          if (label && value) {
-            tableData[label] = value;
-          }
+      // Extract the main heading with name and furigana
+      const mainHeading = await page.locator('h2').first();
+      if ((await mainHeading.count()) > 0) {
+        const headingText = cleanText(await mainHeading.textContent());
+        // Extract name and furigana from heading like "逢沢 一郎（あいさわ いちろう）"
+        const nameMatch = headingText.match(/^([^(（]+)[（(]([^)）]+)[）)]$/);
+        if (nameMatch) {
+          profile.fullName = nameMatch[1].trim();
+          profile.furigana = nameMatch[2].trim();
+        } else {
+          profile.fullName = headingText;
         }
       }
 
-      // Extract from definition lists
-      const dls = await page.locator('dl').all();
-      const dlData: Record<string, string> = {};
+      // Extract the main profile text content
+      const mainContent = await page.locator('body').textContent();
+      const contentText = cleanText(mainContent);
 
-      for (const dl of dls) {
-        const dts = await dl.locator('dt').all();
-        const dds = await dl.locator('dd').all();
+      // Extract election district and party information
+      // Example: "小選挙区（岡山県第一区）選出、自由民主党・無所属の会"
+      const electionMatch = contentText.match(/([^、]+選出)[、，]([^、]+)/);
+      if (electionMatch) {
+        profile.electionDistrict = electionMatch[1].trim();
+        profile.partyAffiliation = electionMatch[2].trim();
+      }
 
-        for (let i = 0; i < Math.min(dts.length, dds.length); i++) {
-          const label = cleanText(await dts[i]?.textContent());
-          const value = cleanText(await dds[i]?.textContent());
-          if (label && value) {
-            dlData[label] = value;
-          }
+      // Extract birth information
+      // Example: "昭和二十九年六月岡山県岡山市に生まれる"
+      const birthMatch = contentText.match(/(昭和|平成|令和)([^年]+年[^に]+に生まれる)/);
+      if (birthMatch) {
+        profile.birthDate = birthMatch[1] + birthMatch[2];
+
+        // Extract birth place more specifically
+        const birthPlaceMatch = birthMatch[2].match(/年[^に]*([^に]+)に生まれる/);
+        if (birthPlaceMatch) {
+          profile.birthPlace = birthPlaceMatch[1].trim();
         }
       }
 
-      // Combine all extracted data
-      const allData = { ...tableData, ...dlData };
+      // Extract education information
+      // Look for university names and graduation info
+      const educationPatterns = [
+        /([^、，]+大学[^、，]*卒業)/g,
+        /([^、，]+大学院[^、，]*)/g,
+        /([^、，]+学部[^、，]*)/g,
+        /([^、，]+研究科[^、，]*)/g,
+      ];
 
-      // Parse birth date from various formats
-      const birthDatePatterns = ['生年月日', '誕生日', '生まれ', '年齢'];
-      for (const pattern of birthDatePatterns) {
-        for (const [key, value] of Object.entries(allData)) {
-          if (key.includes(pattern) && value) {
-            // Extract date pattern like "昭和XX年XX月XX日" or "19XX年XX月XX日"
-            const dateMatch = value.match(
-              /(?:昭和|平成|令和)?(?:(\d{1,2})|(\d{4}))年(\d{1,2})月(\d{1,2})日/
-            );
-            if (dateMatch) {
-              profile.birthDate = value;
-              break;
-            }
-          }
-        }
-        if (profile.birthDate) break;
-      }
-
-      // Parse birth place
-      const birthPlacePatterns = ['出身地', '生まれ', '出身'];
-      for (const pattern of birthPlacePatterns) {
-        for (const [key, value] of Object.entries(allData)) {
-          if (key.includes(pattern) && value && !value.includes('年') && !value.includes('月')) {
-            profile.birthPlace = value;
-            break;
-          }
-        }
-        if (profile.birthPlace) break;
-      }
-
-      // Parse education
-      const educationPatterns = ['学歴', '卒業', '大学', '学校'];
+      const educationMatches: string[] = [];
       for (const pattern of educationPatterns) {
-        for (const [key, value] of Object.entries(allData)) {
-          if (key.includes(pattern) && value) {
-            profile.education = value;
-            break;
-          }
-        }
-        if (profile.education) break;
-      }
-
-      // Parse occupation
-      const occupationPatterns = ['職業', '現職', '前職'];
-      for (const pattern of occupationPatterns) {
-        for (const [key, value] of Object.entries(allData)) {
-          if (key.includes(pattern) && value) {
-            if (pattern === '前職') {
-              profile.previousOccupation = value
-                .split(/[、，,]/)
-                .map((s) => s.trim())
-                .filter((s) => s);
-            } else {
-              profile.occupation = value;
-            }
-            break;
+        const matches = contentText.matchAll(pattern);
+        for (const match of matches) {
+          if (match[1]) {
+            educationMatches.push(match[1].trim());
           }
         }
       }
 
-      // Parse committees
-      const committeePatterns = ['委員会', '所属委員会', '委員'];
-      for (const pattern of committeePatterns) {
-        for (const [key, value] of Object.entries(allData)) {
-          if (key.includes(pattern) && value) {
-            profile.committees = value
-              .split(/[、，,]/)
-              .map((s) => s.trim())
-              .filter((s) => s);
-            break;
-          }
+      if (educationMatches.length > 0) {
+        profile.education = educationMatches[0];
+        profile.academicBackground = educationMatches;
+
+        // Extract university name specifically
+        const uniMatch = educationMatches[0].match(/([^、，]+大学)/);
+        if (uniMatch) {
+          profile.university = uniMatch[1];
         }
-        if (profile.committees) break;
+      }
+
+      // Extract career and position information
+      // This includes government positions, party positions, and Diet positions
+      const careerText = contentText;
+
+      // Parse government positions (政務次官、副大臣など)
+      const govPositions = this.extractPositions(careerText, [
+        '政務次官',
+        '副大臣',
+        '大臣',
+        '長官',
+        '政務官',
+      ]);
+
+      // Parse party positions (部会長、会長、幹事長など)
+      const partyPositions = this.extractPositions(careerText, [
+        '部会長',
+        '会長',
+        '幹事長',
+        '代理',
+        '本部長',
+        '調査会長',
+        '総裁',
+        '副総裁',
+      ]);
+
+      // Parse Diet positions (委員長、議長など)
+      const dietPositions = this.extractPositions(careerText, [
+        '委員長',
+        '議長',
+        '副議長',
+        '議院運営委員長',
+        '予算委員長',
+        '審査会長',
+      ]);
+
+      if (govPositions.length > 0 || partyPositions.length > 0 || dietPositions.length > 0) {
+        profile.previousPositions = {};
+        if (govPositions.length > 0) profile.previousPositions.government = govPositions;
+        if (partyPositions.length > 0) profile.previousPositions.party = partyPositions;
+        if (dietPositions.length > 0) profile.previousPositions.diet = dietPositions;
+      }
+
+      // Extract election history and count
+      // Example: "当選十三回（38 39 40 41 42 43 44 45 46 47 48 49 50）"
+      const electionHistoryMatch = contentText.match(/当選([^回]+回)[（(]([^）)]+)[）)]/);
+      if (electionHistoryMatch) {
+        profile.electionHistory = `当選${electionHistoryMatch[1]}`;
+
+        // Extract election count as number
+        const countMatch = electionHistoryMatch[1].match(/([\d一二三四五六七八九十]+)回/);
+        if (countMatch) {
+          profile.electionCount = this.convertJapaneseNumber(countMatch[1]);
+        }
+
+        // Extract term numbers
+        const termNumbers = electionHistoryMatch[2].split(/\s+/).filter((n) => n.trim());
+        if (termNumbers.length > 0) {
+          profile.termNumbers = termNumbers;
+        }
+      }
+
+      // Extract special achievements and honors
+      // Example: "平成二十三年五月永年在職議員として衆議院より表彰される"
+      const achievementMatches = contentText.matchAll(/(平成|令和|昭和)[^○]*表彰[^○]*/g);
+      const achievements: string[] = [];
+      for (const match of achievementMatches) {
+        if (match[0]) {
+          achievements.push(match[0].trim());
+        }
+      }
+      if (achievements.length > 0) {
+        profile.achievements = achievements;
+      }
+
+      // Extract all other organizations and positions mentioned
+      const organizationMatches = contentText.matchAll(/[（(]([^）)]*財[^）)]*)[）)]/g);
+      const organizations: string[] = [];
+      for (const match of organizationMatches) {
+        if (match[1] && !match[1].includes('年') && !match[1].includes('選挙')) {
+          organizations.push(match[1].trim());
+        }
       }
 
       // Parse contact information
       const websiteLink = await page.locator('a[href^="http"]').first();
       if ((await websiteLink.count()) > 0) {
         const href = await websiteLink.getAttribute('href');
-        if (href) {
+        if (href && !href.includes('readspeaker')) {
           profile.website = href;
         }
       }
 
-      // Parse email
-      const emailLink = await page.locator('a[href^="mailto:"]').first();
-      if ((await emailLink.count()) > 0) {
-        const href = await emailLink.getAttribute('href');
-        if (href) {
-          profile.email = href.replace('mailto:', '');
-        }
-      }
+      // Extract career history as a comprehensive string
+      profile.careerHistory = careerText;
 
-      // Parse office information
-      const officePatterns = ['事務所', '連絡先', '住所', '電話', 'TEL', 'FAX'];
-      const officeData: { address?: string; phone?: string; fax?: string } = {};
+      // Store comprehensive biography
+      profile.biography = contentText;
 
-      for (const pattern of officePatterns) {
-        for (const [key, value] of Object.entries(allData)) {
-          if (key.includes(pattern) && value) {
-            if (key.includes('住所')) {
-              officeData.address = value;
-            } else if (key.includes('電話') || key.includes('TEL')) {
-              officeData.phone = value;
-            } else if (key.includes('FAX')) {
-              officeData.fax = value;
-            }
-          }
-        }
-      }
-
-      if (Object.keys(officeData).length > 0) {
-        profile.office = officeData;
-      }
-
-      // Extract biography from paragraph text
-      const paragraphs = await page.locator('p').all();
-      const biographyTexts: string[] = [];
-
-      for (const p of paragraphs) {
-        const text = cleanText(await p.textContent());
-        if (text.length > 50 && !text.includes('委員会') && !text.includes('事務所')) {
-          biographyTexts.push(text);
-        }
-      }
-
-      if (biographyTexts.length > 0) {
-        profile.biography = biographyTexts.join('\n');
-      }
-
-      // Store additional information not captured above
+      // Extract additional structured information
       const additionalInfo: Record<string, string> = {};
-      for (const [key, value] of Object.entries(allData)) {
-        if (
-          !key.includes('生年月日') &&
-          !key.includes('出身') &&
-          !key.includes('学歴') &&
-          !key.includes('職業') &&
-          !key.includes('委員会') &&
-          !key.includes('事務所') &&
-          !key.includes('連絡先') &&
-          !key.includes('住所') &&
-          !key.includes('電話') &&
-          !key.includes('FAX') &&
-          value
-        ) {
-          additionalInfo[key] = value;
-        }
+
+      // Add information about organizations
+      if (organizations.length > 0) {
+        additionalInfo.関連組織 = organizations.join('、');
+      }
+
+      // Add date information if available
+      const dateMatch = contentText.match(/(令和\d+年\d+月現在)/);
+      if (dateMatch) {
+        additionalInfo.情報更新日 = dateMatch[1];
       }
 
       if (Object.keys(additionalInfo).length > 0) {
@@ -812,5 +808,72 @@ export class HouseOfRepresentativesScraper {
     console.log(
       `Completed profile scraping. Success rate: ${members.filter((m) => m.profile).length}/${membersWithProfiles.length}`
     );
+  }
+
+  /**
+   * Helper method to extract positions from text based on keywords
+   */
+  private extractPositions(text: string, keywords: string[]): string[] {
+    const positions: string[] = [];
+    const sentences = text.split(/[○、，]/);
+
+    for (const sentence of sentences) {
+      for (const keyword of keywords) {
+        if (sentence.includes(keyword)) {
+          // Extract the position title, handling Japanese text patterns
+          const match = sentence.match(new RegExp(`([^、，]*${keyword}[^、，]*)`));
+          if (match?.[1]) {
+            const position = match[1].trim();
+            if (position && !positions.includes(position)) {
+              positions.push(position);
+            }
+          }
+        }
+      }
+    }
+
+    return positions;
+  }
+
+  /**
+   * Helper method to convert Japanese numbers to Arabic numbers
+   */
+  private convertJapaneseNumber(japaneseNum: string): number {
+    // Simple conversion for common numbers used in election counts
+    const numberMap: Record<string, number> = {
+      一: 1,
+      二: 2,
+      三: 3,
+      四: 4,
+      五: 5,
+      六: 6,
+      七: 7,
+      八: 8,
+      九: 9,
+      十: 10,
+      十一: 11,
+      十二: 12,
+      十三: 13,
+      十四: 14,
+      十五: 15,
+      十六: 16,
+      十七: 17,
+      十八: 18,
+      十九: 19,
+      二十: 20,
+    };
+
+    // First try direct lookup
+    if (numberMap[japaneseNum]) {
+      return numberMap[japaneseNum];
+    }
+
+    // Try parsing as Arabic number
+    const arabicNumber = parseInt(japaneseNum, 10);
+    if (!Number.isNaN(arabicNumber)) {
+      return arabicNumber;
+    }
+
+    return 0;
   }
 }
