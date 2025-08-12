@@ -11,9 +11,12 @@ async function main() {
   const args = process.argv.slice(2);
   const includeProfiles = args.includes('--profiles');
   const forceRefresh = args.includes('--force-refresh');
-  const maxProfiles = args.includes('--max-profiles')
-    ? parseInt(args[args.indexOf('--max-profiles') + 1] ?? '10') || 10
-    : 10;
+  const getAllProfiles = args.includes('--all');
+  const maxProfiles = getAllProfiles
+    ? Number.MAX_SAFE_INTEGER // No limit when --all is specified
+    : args.includes('--max-profiles')
+      ? parseInt(args[args.indexOf('--max-profiles') + 1] ?? '10') || 10
+      : 10;
 
   try {
     // Ensure output directory exists
@@ -21,7 +24,9 @@ async function main() {
     mkdirSync(outputDir, { recursive: true });
 
     if (includeProfiles) {
-      const filename = 'diet-members-with-profiles.json';
+      const filename = getAllProfiles
+        ? 'diet-members-with-all-profiles.json'
+        : 'diet-members-with-profiles.json';
       const cacheCheck = shouldUseCachedData(filename, { forceRefresh });
 
       let result: HouseOfRepresentativesResult;
@@ -44,9 +49,15 @@ async function main() {
         console.log('Initializing browser...');
         await scraper.initialize();
 
-        console.log(
-          `Starting to scrape House of Representatives with profiles (max: ${maxProfiles})...`
-        );
+        if (getAllProfiles) {
+          console.log(
+            'Starting to scrape House of Representatives with profiles for ALL members...'
+          );
+        } else {
+          console.log(
+            `Starting to scrape House of Representatives with profiles (max: ${maxProfiles})...`
+          );
+        }
         result = await scraper.scrapeHouseOfRepresentativesWithProfiles({
           includeProfiles: true,
           maxProfiles,
@@ -136,6 +147,7 @@ async function main() {
       '  npm run dev -- --profiles           # Include profile data (default: 10 profiles)'
     );
     console.log('  npm run dev -- --profiles --max-profiles 25  # Include up to 25 profiles');
+    console.log("  npm run dev -- --profiles --all     # Include ALL members' profiles");
     console.log('  npm run dev -- --force-refresh      # Force refresh, ignore cache');
   } catch (error) {
     console.error('Error:', error);

@@ -180,8 +180,14 @@ export class HouseOfRepresentativesScraper {
     }
 
     // Limit the number of profiles to scrape (configurable)
-    const membersToScrape = membersWithUrls.slice(0, maxProfiles);
-    if (membersToScrape.length < membersWithUrls.length) {
+    const membersToScrape =
+      maxProfiles === Number.MAX_SAFE_INTEGER
+        ? membersWithUrls // No limit - scrape all members
+        : membersWithUrls.slice(0, maxProfiles);
+
+    if (maxProfiles === Number.MAX_SAFE_INTEGER) {
+      console.log(`Scraping profiles for ALL ${membersToScrape.length} members`);
+    } else if (membersToScrape.length < membersWithUrls.length) {
       console.log(`Limiting profile scraping to first ${maxProfiles} members (configurable)`);
     }
 
@@ -790,23 +796,40 @@ export class HouseOfRepresentativesScraper {
     const membersWithProfiles = members.filter((m) => m.profileUrl);
     console.log(`Scraping profiles for ${membersWithProfiles.length} members...`);
 
+    let completedCount = 0;
+    let successCount = 0;
+
     // Process in batches to avoid overwhelming the server
     for (let i = 0; i < membersWithProfiles.length; i += maxConcurrent) {
       const batch = membersWithProfiles.slice(i, i + maxConcurrent);
+      const batchNumber = Math.floor(i / maxConcurrent) + 1;
+      const totalBatches = Math.ceil(membersWithProfiles.length / maxConcurrent);
+
+      console.log(`\nProcessing batch ${batchNumber}/${totalBatches} (${batch.length} members)...`);
 
       const promises = batch.map(async (member) => {
         if (member.profileUrl) {
           const profile = await this.scrapeProfile(member.profileUrl);
+          completedCount++;
           if (profile) {
             member.profile = profile;
-            console.log(`✓ Scraped profile for ${member.name}`);
+            successCount++;
+            console.log(`✓ [${completedCount}/${membersWithProfiles.length}] ${member.name}`);
           } else {
-            console.log(`✗ Failed to scrape profile for ${member.name}`);
+            console.log(
+              `✗ [${completedCount}/${membersWithProfiles.length}] ${member.name} - Failed`
+            );
           }
         }
       });
 
       await Promise.all(promises);
+
+      // Show batch completion summary
+      const batchSuccess = batch.filter((m) => m.profile).length;
+      console.log(
+        `Batch ${batchNumber}/${totalBatches} completed: ${batchSuccess}/${batch.length} successful`
+      );
 
       // Add delay between batches
       if (i + maxConcurrent < membersWithProfiles.length && delay > 0) {
@@ -815,9 +838,14 @@ export class HouseOfRepresentativesScraper {
       }
     }
 
+    // Final summary
+    console.log(`\n🎉 Profile scraping completed!`);
     console.log(
-      `Completed profile scraping. Success rate: ${members.filter((m) => m.profile).length}/${membersWithProfiles.length}`
+      `📊 Success rate: ${successCount}/${membersWithProfiles.length} (${Math.round((successCount / membersWithProfiles.length) * 100)}%)`
     );
+    if (successCount < membersWithProfiles.length) {
+      console.log(`⚠️  ${membersWithProfiles.length - successCount} profiles failed to scrape`);
+    }
   }
 
   /**

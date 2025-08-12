@@ -21,12 +21,21 @@ npm run dev -- --profiles
 # Development mode with custom profile limit
 npm run dev -- --profiles --max-profiles 25
 
+# Development mode with ALL members' profiles (WARNING: Takes much longer!)
+npm run dev -- --profiles --all
+
+# Force refresh data (ignore cache)
+npm run dev -- --profiles --force-refresh
+
 # Build and run
 npm run build
 npm start
 
 # Run with profiles in production
 npm start -- --profiles --max-profiles 50
+
+# Run with ALL profiles in production
+npm start -- --profiles --all
 ```
 
 ### Profile Scraping
@@ -41,7 +50,14 @@ The scraper now supports extracting detailed profile information from individual
 - Biography
 - Additional metadata
 
-Profile scraping is rate-limited and includes comprehensive error handling to ensure reliable operation.
+### Profile Scraping Options
+
+- `--profiles`: Enable profile scraping (default: 10 members)
+- `--max-profiles N`: Limit scraping to N members
+- `--all`: Scrape profiles for ALL members (⚠️ **WARNING**: This will take significantly longer!)
+- `--force-refresh`: Ignore cache and fetch fresh data
+
+Profile scraping is rate-limited and includes comprehensive error handling to ensure reliable operation. The `--all` option will scrape profiles for all ~465 House of Representatives members and may take 30+ minutes to complete.
 
 ## Development Tools
 
