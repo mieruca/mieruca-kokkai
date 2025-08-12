@@ -556,10 +556,213 @@ export class HouseOfRepresentativesScraper {
    * @returns Promise<MemberProfile | null> - Extracted profile data
    */
   private async extractProfileFromPage(page: Page): Promise<MemberProfile | null> {
-    // TODO: Fix page.evaluate() issue with TypeScript compilation
-    // For now, return null to prevent __name undefined errors
-    console.log('Profile extraction temporarily disabled due to TypeScript compilation issues');
-    return null;
+    const profile: MemberProfile = {};
+
+    // Helper function to clean text
+    const cleanText = (text: string | null | undefined): string => {
+      return (
+        text
+          ?.trim()
+          .replace(/\s+/g, ' ')
+          .replace(/[　\u3000]/g, ' ') || ''
+      );
+    };
+
+    try {
+      // Extract from table-like structures
+      const tableRows = await page.locator('table tr, .profile-row, .data-row').all();
+      const tableData: Record<string, string> = {};
+
+      for (const row of tableRows) {
+        const cells = await row.locator('td, th, .label, .value').all();
+        if (cells.length >= 2) {
+          const label = cleanText(await cells[0]?.textContent());
+          const value = cleanText(await cells[1]?.textContent());
+          if (label && value) {
+            tableData[label] = value;
+          }
+        }
+      }
+
+      // Extract from definition lists
+      const dls = await page.locator('dl').all();
+      const dlData: Record<string, string> = {};
+
+      for (const dl of dls) {
+        const dts = await dl.locator('dt').all();
+        const dds = await dl.locator('dd').all();
+
+        for (let i = 0; i < Math.min(dts.length, dds.length); i++) {
+          const label = cleanText(await dts[i]?.textContent());
+          const value = cleanText(await dds[i]?.textContent());
+          if (label && value) {
+            dlData[label] = value;
+          }
+        }
+      }
+
+      // Combine all extracted data
+      const allData = { ...tableData, ...dlData };
+
+      // Parse birth date from various formats
+      const birthDatePatterns = ['生年月日', '誕生日', '生まれ', '年齢'];
+      for (const pattern of birthDatePatterns) {
+        for (const [key, value] of Object.entries(allData)) {
+          if (key.includes(pattern) && value) {
+            // Extract date pattern like "昭和XX年XX月XX日" or "19XX年XX月XX日"
+            const dateMatch = value.match(
+              /(?:昭和|平成|令和)?(?:(\d{1,2})|(\d{4}))年(\d{1,2})月(\d{1,2})日/
+            );
+            if (dateMatch) {
+              profile.birthDate = value;
+              break;
+            }
+          }
+        }
+        if (profile.birthDate) break;
+      }
+
+      // Parse birth place
+      const birthPlacePatterns = ['出身地', '生まれ', '出身'];
+      for (const pattern of birthPlacePatterns) {
+        for (const [key, value] of Object.entries(allData)) {
+          if (key.includes(pattern) && value && !value.includes('年') && !value.includes('月')) {
+            profile.birthPlace = value;
+            break;
+          }
+        }
+        if (profile.birthPlace) break;
+      }
+
+      // Parse education
+      const educationPatterns = ['学歴', '卒業', '大学', '学校'];
+      for (const pattern of educationPatterns) {
+        for (const [key, value] of Object.entries(allData)) {
+          if (key.includes(pattern) && value) {
+            profile.education = value;
+            break;
+          }
+        }
+        if (profile.education) break;
+      }
+
+      // Parse occupation
+      const occupationPatterns = ['職業', '現職', '前職'];
+      for (const pattern of occupationPatterns) {
+        for (const [key, value] of Object.entries(allData)) {
+          if (key.includes(pattern) && value) {
+            if (pattern === '前職') {
+              profile.previousOccupation = value
+                .split(/[、，,]/)
+                .map((s) => s.trim())
+                .filter((s) => s);
+            } else {
+              profile.occupation = value;
+            }
+            break;
+          }
+        }
+      }
+
+      // Parse committees
+      const committeePatterns = ['委員会', '所属委員会', '委員'];
+      for (const pattern of committeePatterns) {
+        for (const [key, value] of Object.entries(allData)) {
+          if (key.includes(pattern) && value) {
+            profile.committees = value
+              .split(/[、，,]/)
+              .map((s) => s.trim())
+              .filter((s) => s);
+            break;
+          }
+        }
+        if (profile.committees) break;
+      }
+
+      // Parse contact information
+      const websiteLink = await page.locator('a[href^="http"]').first();
+      if ((await websiteLink.count()) > 0) {
+        const href = await websiteLink.getAttribute('href');
+        if (href) {
+          profile.website = href;
+        }
+      }
+
+      // Parse email
+      const emailLink = await page.locator('a[href^="mailto:"]').first();
+      if ((await emailLink.count()) > 0) {
+        const href = await emailLink.getAttribute('href');
+        if (href) {
+          profile.email = href.replace('mailto:', '');
+        }
+      }
+
+      // Parse office information
+      const officePatterns = ['事務所', '連絡先', '住所', '電話', 'TEL', 'FAX'];
+      const officeData: { address?: string; phone?: string; fax?: string } = {};
+
+      for (const pattern of officePatterns) {
+        for (const [key, value] of Object.entries(allData)) {
+          if (key.includes(pattern) && value) {
+            if (key.includes('住所')) {
+              officeData.address = value;
+            } else if (key.includes('電話') || key.includes('TEL')) {
+              officeData.phone = value;
+            } else if (key.includes('FAX')) {
+              officeData.fax = value;
+            }
+          }
+        }
+      }
+
+      if (Object.keys(officeData).length > 0) {
+        profile.office = officeData;
+      }
+
+      // Extract biography from paragraph text
+      const paragraphs = await page.locator('p').all();
+      const biographyTexts: string[] = [];
+
+      for (const p of paragraphs) {
+        const text = cleanText(await p.textContent());
+        if (text.length > 50 && !text.includes('委員会') && !text.includes('事務所')) {
+          biographyTexts.push(text);
+        }
+      }
+
+      if (biographyTexts.length > 0) {
+        profile.biography = biographyTexts.join('\n');
+      }
+
+      // Store additional information not captured above
+      const additionalInfo: Record<string, string> = {};
+      for (const [key, value] of Object.entries(allData)) {
+        if (
+          !key.includes('生年月日') &&
+          !key.includes('出身') &&
+          !key.includes('学歴') &&
+          !key.includes('職業') &&
+          !key.includes('委員会') &&
+          !key.includes('事務所') &&
+          !key.includes('連絡先') &&
+          !key.includes('住所') &&
+          !key.includes('電話') &&
+          !key.includes('FAX') &&
+          value
+        ) {
+          additionalInfo[key] = value;
+        }
+      }
+
+      if (Object.keys(additionalInfo).length > 0) {
+        profile.additionalInfo = additionalInfo;
+      }
+
+      return Object.keys(profile).length > 0 ? profile : null;
+    } catch (error) {
+      console.error('Error extracting profile from page:', error);
+      return null;
+    }
   }
 
   /**
