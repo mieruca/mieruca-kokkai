@@ -5,7 +5,7 @@ export interface DietMember {
   profileUrl?: string;
   electionCount?: number | { house: number; senate?: number };
   election: {
-    system: 'single-seat' | 'proportional-representation';
+    system: 'single-seat' | 'constituency' | 'proportional-representation';
     prefecture?: string | undefined;
     number?: string | undefined;
     area?: string | undefined;
@@ -15,5 +15,5 @@ export interface DietMember {
 export interface ScrapeResult {
   members: DietMember[];
   scrapedAt: string;
-  source: 'house-of-representatives-list';
+  source: string;
 }
