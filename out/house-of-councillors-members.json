@@ -1,0 +1,2486 @@
+{
+  "members": [
+    {
+      "name": "青木　　　愛",
+      "party": "立憲",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "あおき あい",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7007006.htm"
+    },
+    {
+      "name": "青木　　一彦",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "鳥取"
+      },
+      "furigana": "あおき かずひこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010001.htm"
+    },
+    {
+      "name": "青島　　健太",
+      "party": "維新",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "あおしま けんた",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022002.htm"
+    },
+    {
+      "name": "青山　　繁晴",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "あおやま しげはる",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016002.htm"
+    },
+    {
+      "name": "赤松　　　健",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "あかまつ けん",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022003.htm"
+    },
+    {
+      "name": "秋野　　公造",
+      "party": "公明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "福岡"
+      },
+      "furigana": "あきの こうぞう",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010003.htm"
+    },
+    {
+      "name": "浅尾　慶一郎",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "神奈川"
+      },
+      "furigana": "あさお けいいちろう",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/5998003.htm"
+    },
+    {
+      "name": "浅田　　　均",
+      "party": "維新",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "大阪"
+      },
+      "furigana": "あさだ ひとし",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016003.htm"
+    },
+    {
+      "name": "朝日　健太郎",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "東京"
+      },
+      "furigana": "あさひ けんたろう",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016004.htm"
+    },
+    {
+      "name": "阿達　　雅志",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "あだち まさし",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7014002.htm"
+    },
+    {
+      "name": "足立　　康史",
+      "party": "民主",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "あだち やすし",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025002.htm"
+    },
+    {
+      "name": "安達　　悠司",
+      "party": "不明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "あだち ゆうじ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025003.htm"
+    },
+    {
+      "name": "有村　　治子",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "ありむら はるこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7001006.htm"
+    },
+    {
+      "name": "安藤　　　裕",
+      "party": "不明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "あんどう ひろし",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025004.htm"
+    },
+    {
+      "name": "安野　　貴博",
+      "party": "無所属",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "あんの たかひろ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025005.htm"
+    },
+    {
+      "name": "生稲　　晃子",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "東京"
+      },
+      "furigana": "いくいな あきこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022004.htm"
+    },
+    {
+      "name": "石井　　　章",
+      "party": "維新",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "いしい あきら",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016008.htm"
+    },
+    {
+      "name": "石井　　準一",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "千葉"
+      },
+      "furigana": "いしい じゅんいち",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7007007.htm"
+    },
+    {
+      "name": "石井　　浩郎",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "秋田"
+      },
+      "furigana": "いしい ひろお",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010005.htm"
+    },
+    {
+      "name": "石井　　苗子",
+      "party": "維新",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "いしい みつこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016009.htm"
+    },
+    {
+      "name": "石井　めぐみ",
+      "party": "維新",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "いしい めぐみ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025045.htm"
+    },
+    {
+      "name": "石垣　のりこ",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "宮城"
+      },
+      "furigana": "いしがき のりこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019003.htm"
+    },
+    {
+      "name": "石川　　博崇",
+      "party": "公明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "大阪"
+      },
+      "furigana": "いしかわ ひろたか",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010006.htm"
+    },
+    {
+      "name": "石田　　昌宏",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "いしだ まさひろ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013010.htm"
+    },
+    {
+      "name": "石橋　　通宏",
+      "party": "立憲",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "いしばし みちひろ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010007.htm"
+    },
+    {
+      "name": "泉　　　房穂",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "兵庫"
+      },
+      "furigana": "いずみ ふさほ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025007.htm"
+    },
+    {
+      "name": "伊勢崎　賢治",
+      "party": "れ新",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "いせざき けんじ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025008.htm"
+    },
+    {
+      "name": "礒崎　　哲史",
+      "party": "民主",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "いそざき てつじ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013011.htm"
+    },
+    {
+      "name": "磯崎　　仁彦",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "香川"
+      },
+      "furigana": "いそざき よしひこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010008.htm"
+    },
+    {
+      "name": "伊藤　　孝江",
+      "party": "公明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "兵庫"
+      },
+      "furigana": "いとう たかえ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016005.htm"
+    },
+    {
+      "name": "伊藤　　孝恵",
+      "party": "民主",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "愛知"
+      },
+      "furigana": "いとう たかえ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016006.htm"
+    },
+    {
+      "name": "伊藤　　辰夫",
+      "party": "民主",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "いとう たつお",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025009.htm"
+    },
+    {
+      "name": "井上　　義行",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "いのうえ よしゆき",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013006.htm"
+    },
+    {
+      "name": "猪口　　邦子",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "千葉"
+      },
+      "furigana": "いのぐち くにこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010009.htm"
+    },
+    {
+      "name": "猪瀬　　直樹",
+      "party": "維新",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "いのせ なおき",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022005.htm"
+    },
+    {
+      "name": "伊波　　洋一",
+      "party": "不明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "沖縄"
+      },
+      "furigana": "いは よういち",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016007.htm"
+    },
+    {
+      "name": "今井　絵理子",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "いまい えりこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016010.htm"
+    },
+    {
+      "name": "岩渕　　　友",
+      "party": "共産",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "いわぶち とも",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016011.htm"
+    },
+    {
+      "name": "岩本　　剛人",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "北海道"
+      },
+      "furigana": "いわもと つよひと",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019005.htm"
+    },
+    {
+      "name": "岩本　　麻奈",
+      "party": "不明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "いわもと まな",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025038.htm"
+    },
+    {
+      "name": "いんどう　周作",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "いんどう しゅうさく",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025010.htm"
+    },
+    {
+      "name": "上田　　　勇",
+      "party": "公明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "うえだ いさむ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022006.htm"
+    },
+    {
+      "name": "上田　　清司",
+      "party": "民主",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "埼玉"
+      },
+      "furigana": "うえだ きよし",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019042.htm"
+    },
+    {
+      "name": "上野　　通子",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "栃木"
+      },
+      "furigana": "うえの みちこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010013.htm"
+    },
+    {
+      "name": "牛田　　茉友",
+      "party": "民主",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "東京"
+      },
+      "furigana": "うしだ まゆ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025035.htm"
+    },
+    {
+      "name": "臼井　　正一",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "千葉"
+      },
+      "furigana": "うすい しょういち",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022007.htm"
+    },
+    {
+      "name": "打越　さく良",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "新潟"
+      },
+      "furigana": "うちこし さくら",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019006.htm"
+    },
+    {
+      "name": "梅村　みずほ",
+      "party": "不明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "うめむら みずほ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019007.htm"
+    },
+    {
+      "name": "江島　　　潔",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "山口"
+      },
+      "furigana": "えじま きよし",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013001.htm"
+    },
+    {
+      "name": "江原　くみ子",
+      "party": "民主",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "埼玉"
+      },
+      "furigana": "えはら くみこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025011.htm"
+    },
+    {
+      "name": "大家　　敏志",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "福岡"
+      },
+      "furigana": "おおいえ さとし",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010018.htm"
+    },
+    {
+      "name": "大島　九州男",
+      "party": "れ新",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "おおしま くすお",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7007017.htm"
+    },
+    {
+      "name": "大津　　　力",
+      "party": "不明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "埼玉"
+      },
+      "furigana": "おおつ つとむ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025013.htm"
+    },
+    {
+      "name": "岡崎　　　太",
+      "party": "維新",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "大阪"
+      },
+      "furigana": "おかざき ふとし",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025014.htm"
+    },
+    {
+      "name": "岡田　　直樹",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "石川"
+      },
+      "furigana": "おかだ なおき",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7004012.htm"
+    },
+    {
+      "name": "小川　　克巳",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "おがわ かつみ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016012.htm"
+    },
+    {
+      "name": "奥田　ふみよ",
+      "party": "れ新",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "おくだ ふみよ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025012.htm"
+    },
+    {
+      "name": "奥村　　祥大",
+      "party": "民主",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "東京"
+      },
+      "furigana": "おくむら よしひろ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025015.htm"
+    },
+    {
+      "name": "小沢　　雅仁",
+      "party": "立憲",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "おざわ まさひと",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019008.htm"
+    },
+    {
+      "name": "越智　　俊之",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "おち としゆき",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022008.htm"
+    },
+    {
+      "name": "尾辻　　朋実",
+      "party": "無所属",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "鹿児島"
+      },
+      "furigana": "おつじ ともみ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025032.htm"
+    },
+    {
+      "name": "鬼木　　　誠",
+      "party": "立憲",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "おにき まこと",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022009.htm"
+    },
+    {
+      "name": "小野田　紀美",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "岡山"
+      },
+      "furigana": "おのだ きみ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016013.htm"
+    },
+    {
+      "name": "かごしま　彰宏",
+      "party": "民主",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "神奈川"
+      },
+      "furigana": "かごしま あきひろ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025016.htm"
+    },
+    {
+      "name": "梶原　　大介",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "かじはら だいすけ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022012.htm"
+    },
+    {
+      "name": "加田　　裕之",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "兵庫"
+      },
+      "furigana": "かだ ひろゆき",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019011.htm"
+    },
+    {
+      "name": "嘉田　由紀子",
+      "party": "維新",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "かだ ゆきこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019012.htm"
+    },
+    {
+      "name": "片山　さつき",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "かたやま さつき",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010020.htm"
+    },
+    {
+      "name": "片山　　大介",
+      "party": "維新",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "兵庫"
+      },
+      "furigana": "かたやま だいすけ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016014.htm"
+    },
+    {
+      "name": "勝部　　賢志",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "北海道"
+      },
+      "furigana": "かつべ けんじ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019013.htm"
+    },
+    {
+      "name": "加藤　　明良",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "茨城"
+      },
+      "furigana": "かとう あきよし",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022010.htm"
+    },
+    {
+      "name": "金子　　道仁",
+      "party": "維新",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "かねこ みちひと",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022013.htm"
+    },
+    {
+      "name": "かまやち　敏",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "かまやち さとし",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025017.htm"
+    },
+    {
+      "name": "神谷　　宗幣",
+      "party": "不明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "かみや そうへい",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022014.htm"
+    },
+    {
+      "name": "神谷　　政幸",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "かみや まさゆき",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022015.htm"
+    },
+    {
+      "name": "川合　　孝典",
+      "party": "民主",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "かわい たかのり",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7007022.htm"
+    },
+    {
+      "name": "川村　　雄大",
+      "party": "公明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "東京"
+      },
+      "furigana": "かわむら ゆうだい",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025018.htm"
+    },
+    {
+      "name": "岸　　真紀子",
+      "party": "立憲",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "きし まきこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019016.htm"
+    },
+    {
+      "name": "北村　　経夫",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "山口"
+      },
+      "furigana": "きたむら つねお",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013019.htm"
+    },
+    {
+      "name": "北村　　晴男",
+      "party": "不明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "きたむら はるお",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025020.htm"
+    },
+    {
+      "name": "木戸口　英司",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "岩手"
+      },
+      "furigana": "きどぐち えいじ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016015.htm"
+    },
+    {
+      "name": "木村　　英子",
+      "party": "れ新",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "きむら えいこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019015.htm"
+    },
+    {
+      "name": "吉良　よし子",
+      "party": "共産",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "東京"
+      },
+      "furigana": "きら よしこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013017.htm"
+    },
+    {
+      "name": "串田　　誠一",
+      "party": "維新",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "くしだ せいいち",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022016.htm"
+    },
+    {
+      "name": "窪田　　哲也",
+      "party": "公明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "くぼた てつや",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022017.htm"
+    },
+    {
+      "name": "熊谷　　裕人",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "埼玉"
+      },
+      "furigana": "くまがい ひろと",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019017.htm"
+    },
+    {
+      "name": "見坂　　茂範",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "けんざか しげのり",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025021.htm"
+    },
+    {
+      "name": "小池　　　晃",
+      "party": "共産",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "こいけ あきら",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/5998022.htm"
+    },
+    {
+      "name": "上月　　良祐",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "茨城"
+      },
+      "furigana": "こうづき りょうすけ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013022.htm"
+    },
+    {
+      "name": "郡山　りょう",
+      "party": "立憲",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "こおりやま りょう",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025022.htm"
+    },
+    {
+      "name": "古賀　　千景",
+      "party": "立憲",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "こが ちかげ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022019.htm"
+    },
+    {
+      "name": "古賀　友一郎",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "長崎"
+      },
+      "furigana": "こが ゆういちろう",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013021.htm"
+    },
+    {
+      "name": "古賀　　之士",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "福岡"
+      },
+      "furigana": "こが ゆきひと",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016018.htm"
+    },
+    {
+      "name": "小島　とも子",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "三重"
+      },
+      "furigana": "こじま ともこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025023.htm"
+    },
+    {
+      "name": "古庄　　玄知",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "大分"
+      },
+      "furigana": "こしょう はるとも",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022020.htm"
+    },
+    {
+      "name": "後藤　　翔太",
+      "party": "不明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "ごとう しょうた",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025024.htm"
+    },
+    {
+      "name": "後藤　　　斎",
+      "party": "民主",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "山梨"
+      },
+      "furigana": "ごとう ひとし",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025025.htm"
+    },
+    {
+      "name": "小西　　洋之",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "千葉"
+      },
+      "furigana": "こにし ひろゆき",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010024.htm"
+    },
+    {
+      "name": "小林　　一大",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "新潟"
+      },
+      "furigana": "こばやし かずひろ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022018.htm"
+    },
+    {
+      "name": "小林　孝一郎",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "岡山"
+      },
+      "furigana": "こばやし こういちろう",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025026.htm"
+    },
+    {
+      "name": "小林　さやか",
+      "party": "民主",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "千葉"
+      },
+      "furigana": "こばやし さやか",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025041.htm"
+    },
+    {
+      "name": "こやり　隆史",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "滋賀"
+      },
+      "furigana": "こやり たかし",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016017.htm"
+    },
+    {
+      "name": "齊藤　健一郎",
+      "party": "無所属",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "さいとう けんいちろう",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7023002.htm"
+    },
+    {
+      "name": "斎藤　　嘉隆",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "愛知"
+      },
+      "furigana": "さいとう よしたか",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010027.htm"
+    },
+    {
+      "name": "酒井　　庸行",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "愛知"
+      },
+      "furigana": "さかい やすゆき",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013024.htm"
+    },
+    {
+      "name": "櫻井　　祥子",
+      "party": "不明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "茨城"
+      },
+      "furigana": "さくらい しょうこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025028.htm"
+    },
+    {
+      "name": "櫻井　　　充",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "宮城"
+      },
+      "furigana": "さくらい みつる",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/5998030.htm"
+    },
+    {
+      "name": "佐々木　雅文",
+      "party": "公明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "ささき まさふみ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025029.htm"
+    },
+    {
+      "name": "佐々木　りえ",
+      "party": "維新",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "大阪"
+      },
+      "furigana": "ささき りえ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025040.htm"
+    },
+    {
+      "name": "佐藤　　　啓",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "奈良"
+      },
+      "furigana": "さとう けい",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016019.htm"
+    },
+    {
+      "name": "里見　　隆治",
+      "party": "公明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "愛知"
+      },
+      "furigana": "さとみ りゅうじ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016020.htm"
+    },
+    {
+      "name": "塩入　　清香",
+      "party": "不明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "東京"
+      },
+      "furigana": "しおいり さやか",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025030.htm"
+    },
+    {
+      "name": "塩村　あやか",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "東京"
+      },
+      "furigana": "しおむら あやか",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019020.htm"
+    },
+    {
+      "name": "柴　　　愼一",
+      "party": "立憲",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "しば しんいち",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022021.htm"
+    },
+    {
+      "name": "柴田　　　巧",
+      "party": "維新",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "しばた たくみ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010029.htm"
+    },
+    {
+      "name": "自見　はなこ",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "じみ はなこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016021.htm"
+    },
+    {
+      "name": "清水　　真人",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "群馬"
+      },
+      "furigana": "しみず まさと",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019018.htm"
+    },
+    {
+      "name": "下野　　六太",
+      "party": "公明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "福岡"
+      },
+      "furigana": "しもの ろくた",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019021.htm"
+    },
+    {
+      "name": "白川　　容子",
+      "party": "共産",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "しらかわ ようこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025031.htm"
+    },
+    {
+      "name": "進藤　金日子",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "しんどう かねひこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016022.htm"
+    },
+    {
+      "name": "榛葉　賀津也",
+      "party": "民主",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "静岡"
+      },
+      "furigana": "しんば かづや",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7001027.htm"
+    },
+    {
+      "name": "末松　　信介",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "兵庫"
+      },
+      "furigana": "すえまつ しんすけ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7004033.htm"
+    },
+    {
+      "name": "杉　　　久武",
+      "party": "公明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "大阪"
+      },
+      "furigana": "すぎ ひさたけ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013028.htm"
+    },
+    {
+      "name": "杉尾　　秀哉",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "長野"
+      },
+      "furigana": "すぎお ひでや",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016023.htm"
+    },
+    {
+      "name": "杉本　　純子",
+      "party": "不明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "愛知"
+      },
+      "furigana": "すぎもと じゅんこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025033.htm"
+    },
+    {
+      "name": "鈴木　　大地",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "東京"
+      },
+      "furigana": "すずき だいち",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025034.htm"
+    },
+    {
+      "name": "鈴木　　宗男",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "すずき むねお",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019023.htm"
+    },
+    {
+      "name": "石　　　　平",
+      "party": "維新",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "せき へい",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025019.htm"
+    },
+    {
+      "name": "関口　　昌一",
+      "party": "無所属",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "埼玉"
+      },
+      "furigana": "せきぐち まさかず",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7003005.htm"
+    },
+    {
+      "name": "大門　実紀史",
+      "party": "共産",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "だいもん みきし",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7001001.htm"
+    },
+    {
+      "name": "高木　かおり",
+      "party": "維新",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "大阪"
+      },
+      "furigana": "たかぎ かおり",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016026.htm"
+    },
+    {
+      "name": "高木　　真理",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "埼玉"
+      },
+      "furigana": "たかぎ まり",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022023.htm"
+    },
+    {
+      "name": "高橋　　克法",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "栃木"
+      },
+      "furigana": "たかはし かつのり",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013030.htm"
+    },
+    {
+      "name": "高橋　はるみ",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "北海道"
+      },
+      "furigana": "たかはし はるみ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019026.htm"
+    },
+    {
+      "name": "高橋　　光男",
+      "party": "公明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "兵庫"
+      },
+      "furigana": "たかはし みつお",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019027.htm"
+    },
+    {
+      "name": "高良　　沙哉",
+      "party": "不明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "沖縄"
+      },
+      "furigana": "たから さちか",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025027.htm"
+    },
+    {
+      "name": "滝波　　宏文",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "福井"
+      },
+      "furigana": "たきなみ ひろふみ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013032.htm"
+    },
+    {
+      "name": "竹内　　真二",
+      "party": "公明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "たけうち しんじ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7017001.htm"
+    },
+    {
+      "name": "竹詰　　　仁",
+      "party": "民主",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "たけづめ ひとし",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022024.htm"
+    },
+    {
+      "name": "竹谷　とし子",
+      "party": "公明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "東京"
+      },
+      "furigana": "たけや としこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010033.htm"
+    },
+    {
+      "name": "田島　麻衣子",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "愛知"
+      },
+      "furigana": "たじま まいこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019024.htm"
+    },
+    {
+      "name": "田名部　匡代",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "青森"
+      },
+      "furigana": "たなぶ まさよ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016025.htm"
+    },
+    {
+      "name": "谷合　　正明",
+      "party": "公明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "たにあい まさあき",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7004036.htm"
+    },
+    {
+      "name": "田村　　まみ",
+      "party": "民主",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "たむら まみ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019025.htm"
+    },
+    {
+      "name": "司　　　隆史",
+      "party": "公明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "つかさ たかし",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025036.htm"
+    },
+    {
+      "name": "辻元　　清美",
+      "party": "立憲",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "つじもと きよみ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022025.htm"
+    },
+    {
+      "name": "鶴保　　庸介",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "和歌山"
+      },
+      "furigana": "つるほ ようすけ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/5998036.htm"
+    },
+    {
+      "name": "出川　　桃子",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "鳥取"
+      },
+      "furigana": "でがわ ももこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025037.htm"
+    },
+    {
+      "name": "寺田　　　静",
+      "party": "無所属",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "秋田"
+      },
+      "furigana": "てらた しずか",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019030.htm"
+    },
+    {
+      "name": "天畠　　大輔",
+      "party": "れ新",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "てんばた だいすけ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022026.htm"
+    },
+    {
+      "name": "堂込　麻紀子",
+      "party": "民主",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "茨城"
+      },
+      "furigana": "どうごみ まきこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022027.htm"
+    },
+    {
+      "name": "徳永　　エリ",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "北海道"
+      },
+      "furigana": "とくなが えり",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010036.htm"
+    },
+    {
+      "name": "友納　　理緒",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "とものう りお",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022028.htm"
+    },
+    {
+      "name": "永井　　　学",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "山梨"
+      },
+      "furigana": "ながい まなぶ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022030.htm"
+    },
+    {
+      "name": "ながえ　孝子",
+      "party": "無所属",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "愛媛"
+      },
+      "furigana": "ながえ たかこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019031.htm"
+    },
+    {
+      "name": "中条　きよし",
+      "party": "維新",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "なかじょう きよし",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022029.htm"
+    },
+    {
+      "name": "中曽根　弘文",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "群馬"
+      },
+      "furigana": "なかそね ひろふみ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/5986024.htm"
+    },
+    {
+      "name": "中田　　優子",
+      "party": "不明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "福岡"
+      },
+      "furigana": "なかだ ゆうこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025039.htm"
+    },
+    {
+      "name": "中西　　祐介",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "徳島"
+      },
+      "furigana": "なかにし ゆうすけ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010038.htm"
+    },
+    {
+      "name": "長浜　　博行",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "千葉"
+      },
+      "furigana": "ながはま ひろゆき",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7007041.htm"
+    },
+    {
+      "name": "新実　　彰平",
+      "party": "維新",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "京都"
+      },
+      "furigana": "にいみ しょうへい",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025042.htm"
+    },
+    {
+      "name": "西田　　昌司",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "京都"
+      },
+      "furigana": "にしだ しょうじ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7007044.htm"
+    },
+    {
+      "name": "西田　　英範",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "広島"
+      },
+      "furigana": "にした ひでのり",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025043.htm"
+    },
+    {
+      "name": "西田　　実仁",
+      "party": "公明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "埼玉"
+      },
+      "furigana": "にしだ まこと",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7004043.htm"
+    },
+    {
+      "name": "仁比　　聡平",
+      "party": "共産",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "にひ そうへい",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7004045.htm"
+    },
+    {
+      "name": "庭田　　幸恵",
+      "party": "民主",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "富山"
+      },
+      "furigana": "にわた ゆきえ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025044.htm"
+    },
+    {
+      "name": "野上　浩太郎",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "富山"
+      },
+      "furigana": "のがみ こうたろう",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7001037.htm"
+    },
+    {
+      "name": "野村　　哲郎",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "鹿児島"
+      },
+      "furigana": "のむら てつろう",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7004046.htm"
+    },
+    {
+      "name": "芳賀　　道也",
+      "party": "民主",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "山形"
+      },
+      "furigana": "はが みちや",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019032.htm"
+    },
+    {
+      "name": "初鹿野　裕樹",
+      "party": "不明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "神奈川"
+      },
+      "furigana": "はじかの ひろき",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025046.htm"
+    },
+    {
+      "name": "橋本　　聖子",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "はしもと せいこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/5995054.htm"
+    },
+    {
+      "name": "長谷川　　岳",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "北海道"
+      },
+      "furigana": "はせがわ がく",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010043.htm"
+    },
+    {
+      "name": "長谷川　英晴",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "はせがわ ひではる",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022031.htm"
+    },
+    {
+      "name": "羽田　　次郎",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "長野"
+      },
+      "furigana": "はた じろう",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7021002.htm"
+    },
+    {
+      "name": "馬場　　成志",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "熊本"
+      },
+      "furigana": "ばば せいし",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013044.htm"
+    },
+    {
+      "name": "浜口　　　誠",
+      "party": "民主",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "はまぐち まこと",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016032.htm"
+    },
+    {
+      "name": "浜野　　喜史",
+      "party": "民主",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "はまの よしふみ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013045.htm"
+    },
+    {
+      "name": "原田　大二郎",
+      "party": "公明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "はらだ だいじろう",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025047.htm"
+    },
+    {
+      "name": "原田　　秀一",
+      "party": "民主",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "香川"
+      },
+      "furigana": "はらだ ひでかず",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025048.htm"
+    },
+    {
+      "name": "東野　　秀樹",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "ひがしの ひでき",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025049.htm"
+    },
+    {
+      "name": "百田　　尚樹",
+      "party": "不明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "ひゃくた なおき",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025050.htm"
+    },
+    {
+      "name": "平木　　大作",
+      "party": "公明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "ひらき だいさく",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013046.htm"
+    },
+    {
+      "name": "平戸　　航太",
+      "party": "民主",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "ひらど こうた",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025051.htm"
+    },
+    {
+      "name": "平山　佐知子",
+      "party": "無所属",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "静岡"
+      },
+      "furigana": "ひらやま さちこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016033.htm"
+    },
+    {
+      "name": "広田　　　一",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "徳島"
+      },
+      "furigana": "ひろた はじめ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7004050.htm"
+    },
+    {
+      "name": "福岡　　資麿",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "佐賀"
+      },
+      "furigana": "ふくおか たかまろ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010045.htm"
+    },
+    {
+      "name": "福士　　珠美",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "青森"
+      },
+      "furigana": "ふくし ますみ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025052.htm"
+    },
+    {
+      "name": "福島　みずほ",
+      "party": "立憲",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "ふくしま みずほ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/5998049.htm"
+    },
+    {
+      "name": "福山　　哲郎",
+      "party": "無所属",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "京都"
+      },
+      "furigana": "ふくやま てつろう",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/5998050.htm"
+    },
+    {
+      "name": "福山　　　守",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "ふくやま まもる",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025053.htm"
+    },
+    {
+      "name": "藤井　　一博",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "ふじい かずひろ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022033.htm"
+    },
+    {
+      "name": "藤川　　政人",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "愛知"
+      },
+      "furigana": "ふじかわ まさひと",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010046.htm"
+    },
+    {
+      "name": "藤木　　眞也",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "ふじき しんや",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016034.htm"
+    },
+    {
+      "name": "船橋　　利実",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "北海道"
+      },
+      "furigana": "ふなはし としみつ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022034.htm"
+    },
+    {
+      "name": "舟山　　康江",
+      "party": "民主",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "山形"
+      },
+      "furigana": "ふなやま やすえ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7007052.htm"
+    },
+    {
+      "name": "古川　　俊治",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "埼玉"
+      },
+      "furigana": "ふるかわ としはる",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7007053.htm"
+    },
+    {
+      "name": "星　　　北斗",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "福島"
+      },
+      "furigana": "ほし ほくと",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022035.htm"
+    },
+    {
+      "name": "堀井　　　巌",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "奈良"
+      },
+      "furigana": "ほりい いわお",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013048.htm"
+    },
+    {
+      "name": "本田　　顕子",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "ほんだ あきこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019034.htm"
+    },
+    {
+      "name": "舞立　　昇治",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "まいたち しょうじ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013049.htm"
+    },
+    {
+      "name": "牧野　たかお",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "静岡"
+      },
+      "furigana": "まきの たかお",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7007054.htm"
+    },
+    {
+      "name": "牧山　ひろえ",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "神奈川"
+      },
+      "furigana": "まきやま ひろえ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7007055.htm"
+    },
+    {
+      "name": "松川　　るい",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "大阪"
+      },
+      "furigana": "まつかわ るい",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016035.htm"
+    },
+    {
+      "name": "松沢　　成文",
+      "party": "維新",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "神奈川"
+      },
+      "furigana": "まつざわ しげふみ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013050.htm"
+    },
+    {
+      "name": "松下　　新平",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "宮崎"
+      },
+      "furigana": "まつした しんぺい",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7004056.htm"
+    },
+    {
+      "name": "松田　　　学",
+      "party": "不明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "まつだ まなぶ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025054.htm"
+    },
+    {
+      "name": "松野　　明美",
+      "party": "維新",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "まつの あけみ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022036.htm"
+    },
+    {
+      "name": "松村　　祥史",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "熊本"
+      },
+      "furigana": "まつむら よしふみ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7004057.htm"
+    },
+    {
+      "name": "松山　　政司",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "福岡"
+      },
+      "furigana": "まつやま まさじ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7001046.htm"
+    },
+    {
+      "name": "三浦　　信祐",
+      "party": "公明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "神奈川"
+      },
+      "furigana": "みうら のぶひろ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016036.htm"
+    },
+    {
+      "name": "三上　　えり",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "広島"
+      },
+      "furigana": "みかみ えり",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022037.htm"
+    },
+    {
+      "name": "水岡　　俊一",
+      "party": "立憲",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "みずおか しゅんいち",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7004058.htm"
+    },
+    {
+      "name": "水野　　孝一",
+      "party": "民主",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "愛知"
+      },
+      "furigana": "みずの こういち",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025055.htm"
+    },
+    {
+      "name": "三原　じゅん子",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "神奈川"
+      },
+      "furigana": "みはら じゅんこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010048.htm"
+    },
+    {
+      "name": "宮崎　　　勝",
+      "party": "公明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "みやざき まさる",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016037.htm"
+    },
+    {
+      "name": "宮沢　　洋一",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "広島"
+      },
+      "furigana": "みやざわ よういち",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010050.htm"
+    },
+    {
+      "name": "宮出　　千慧",
+      "party": "不明",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "大阪"
+      },
+      "furigana": "みやで ちさと",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025056.htm"
+    },
+    {
+      "name": "宮本　　和宏",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "滋賀"
+      },
+      "furigana": "みやもと かずひろ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025057.htm"
+    },
+    {
+      "name": "宮本　　周司",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "石川"
+      },
+      "furigana": "みやもと しゅうじ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013053.htm"
+    },
+    {
+      "name": "村田　　享子",
+      "party": "立憲",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "むらた きょうこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022039.htm"
+    },
+    {
+      "name": "望月　　良男",
+      "party": "無所属",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "和歌山"
+      },
+      "furigana": "もちづき よしお",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025058.htm"
+    },
+    {
+      "name": "森　　まさこ",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "福島"
+      },
+      "furigana": "もり まさこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7007061.htm"
+    },
+    {
+      "name": "森　　ゆうこ",
+      "party": "立憲",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "もり ゆうこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7001047.htm"
+    },
+    {
+      "name": "森本　　真治",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "広島"
+      },
+      "furigana": "もりもと しんじ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013054.htm"
+    },
+    {
+      "name": "山内　佳菜子",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "宮崎"
+      },
+      "furigana": "やまうち かなこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025059.htm"
+    },
+    {
+      "name": "山崎　　正昭",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "福井"
+      },
+      "furigana": "やまざき まさあき",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/5992051.htm"
+    },
+    {
+      "name": "山下　　雄平",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "佐賀"
+      },
+      "furigana": "やました ゆうへい",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013060.htm"
+    },
+    {
+      "name": "山添　　　拓",
+      "party": "共産",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "東京"
+      },
+      "furigana": "やまぞえ たく",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016042.htm"
+    },
+    {
+      "name": "山田　　太郎",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "やまだ たろう",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7012005.htm"
+    },
+    {
+      "name": "山田　　　宏",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "やまだ ひろし",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7016043.htm"
+    },
+    {
+      "name": "山田　　吉彦",
+      "party": "民主",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "やまだ よしひこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025060.htm"
+    },
+    {
+      "name": "山谷　えり子",
+      "party": "自民",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "やまたに えりこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7004013.htm"
+    },
+    {
+      "name": "山中　　　泉",
+      "party": "不明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "やまなか せん",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025061.htm"
+    },
+    {
+      "name": "山本　　啓介",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "長崎"
+      },
+      "furigana": "やまもと けいすけ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022040.htm"
+    },
+    {
+      "name": "山本　佐知子",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "三重"
+      },
+      "furigana": "やまもと さちこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022041.htm"
+    },
+    {
+      "name": "山本　　順三",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "愛媛"
+      },
+      "furigana": "やまもと じゅんぞう",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7004062.htm"
+    },
+    {
+      "name": "山本　　太郎",
+      "party": "れ新",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "東京"
+      },
+      "furigana": "やまもと たろう",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7013062.htm"
+    },
+    {
+      "name": "横沢　　高徳",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "岩手"
+      },
+      "furigana": "よこさわ たかのり",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7019040.htm"
+    },
+    {
+      "name": "横山　　信一",
+      "party": "公明",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "よこやま しんいち",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010052.htm"
+    },
+    {
+      "name": "吉井　　　章",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "京都"
+      },
+      "furigana": "よしい あきら",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022042.htm"
+    },
+    {
+      "name": "吉川　　沙織",
+      "party": "立憲",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "よしかわ さおり",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7007071.htm"
+    },
+    {
+      "name": "吉田　　忠智",
+      "party": "立憲",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "大分"
+      },
+      "furigana": "よしだ ただとも",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010053.htm"
+    },
+    {
+      "name": "ラサール石井",
+      "party": "立憲",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "らさーるいしい",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025006.htm"
+    },
+    {
+      "name": "蓮舫",
+      "party": "立憲",
+      "election": {
+        "system": "proportional-representation",
+        "area": "比例"
+      },
+      "furigana": "れんほう",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7004060.htm"
+    },
+    {
+      "name": "若井　　敦子",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "岐阜"
+      },
+      "furigana": "わかい あつこ",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025062.htm"
+    },
+    {
+      "name": "若林　　洋平",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "静岡"
+      },
+      "furigana": "わかばやし ようへい",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7022043.htm"
+    },
+    {
+      "name": "脇　　　雅昭",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "神奈川"
+      },
+      "furigana": "わき まさあき",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7025063.htm"
+    },
+    {
+      "name": "渡辺　　猛之",
+      "party": "自民",
+      "election": {
+        "system": "single-seat",
+        "prefecture": "岐阜"
+      },
+      "furigana": "わたなべ たけゆき",
+      "profileUrl": "https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/profile/7010055.htm"
+    }
+  ],
+  "scrapedAt": "2025-08-13T06:30:52.562Z",
+  "source": "house-of-councillors-list"
+}
