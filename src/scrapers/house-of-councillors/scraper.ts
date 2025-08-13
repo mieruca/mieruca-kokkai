@@ -483,13 +483,16 @@ export class HouseOfCouncillorsScraper {
       }
 
       if (educationMatches.length > 0) {
-        profile.education = educationMatches[0];
-        profile.academicBackground = educationMatches;
+        const firstEducation = educationMatches[0];
+        if (firstEducation) {
+          profile.education = firstEducation;
+          profile.academicBackground = educationMatches;
 
-        // Extract university name specifically
-        const uniMatch = educationMatches[0].match(/([^、，]+大学)/);
-        if (uniMatch?.[1]) {
-          profile.university = uniMatch[1];
+          // Extract university name specifically
+          const uniMatch = firstEducation.match(/([^、，]+大学)/);
+          if (uniMatch?.[1]) {
+            profile.university = uniMatch[1];
+          }
         }
       }
 

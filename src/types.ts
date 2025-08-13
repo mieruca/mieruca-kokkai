@@ -15,5 +15,5 @@ export interface DietMember {
 export interface ScrapeResult {
   members: DietMember[];
   scrapedAt: string;
-  source: 'house-of-representatives-list';
+  source: string;
 }
