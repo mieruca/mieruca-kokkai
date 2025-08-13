@@ -69,12 +69,39 @@ export class HouseOfCouncillorsScraper {
     try {
       console.log('Scraping House of Councillors member list...');
 
-      await page.goto(HOUSE_OF_COUNCILLORS_CONFIG.URLS.CURRENT, {
-        waitUntil: 'domcontentloaded',
-      });
-      await page.waitForSelector('table', {
-        timeout: HOUSE_OF_COUNCILLORS_CONFIG.TIMEOUTS.PAGE_LOAD,
-      });
+      // Try main URL first, then fallback URLs if needed
+      let pageLoaded = false;
+      const urlsToTry = [
+        HOUSE_OF_COUNCILLORS_CONFIG.URLS.CURRENT,
+        ...HOUSE_OF_COUNCILLORS_CONFIG.URLS.FALLBACK_URLS,
+      ];
+
+      for (const url of urlsToTry) {
+        try {
+          console.log(`Attempting to load: ${url}`);
+          await page.goto(url, {
+            waitUntil: 'domcontentloaded',
+            timeout: HOUSE_OF_COUNCILLORS_CONFIG.TIMEOUTS.NAVIGATION,
+          });
+          await page.waitForSelector('table', {
+            timeout: HOUSE_OF_COUNCILLORS_CONFIG.TIMEOUTS.PAGE_LOAD,
+          });
+          pageLoaded = true;
+          console.log(`Successfully loaded: ${url}`);
+          break;
+        } catch (error) {
+          console.warn(`Failed to load ${url}:`, error instanceof Error ? error.message : error);
+          if (url === urlsToTry[urlsToTry.length - 1]) {
+            throw new Error(
+              `All fallback URLs failed. Last error: ${error instanceof Error ? error.message : error}`
+            );
+          }
+        }
+      }
+
+      if (!pageLoaded) {
+        throw new Error('Failed to load any URLs');
+      }
 
       const rawMemberData = await this.extractMembersFromPage(page);
       console.log(`Found ${rawMemberData.length} raw members`);
@@ -224,7 +251,17 @@ export class HouseOfCouncillorsScraper {
 
     const isPartyKeyword = (text: string): boolean => {
       const t = (text || '').trim();
-      return HOUSE_OF_COUNCILLORS_CONFIG.POLITICAL_PARTIES.some((keyword) => t.includes(keyword));
+      if (!t || t.length < 1) return false;
+
+      // Check against known parties first
+      const isKnownParty = HOUSE_OF_COUNCILLORS_CONFIG.KNOWN_POLITICAL_PARTIES.some((keyword) =>
+        t.includes(keyword)
+      );
+
+      if (isKnownParty) return true;
+
+      // Check against flexible patterns for new parties
+      return HOUSE_OF_COUNCILLORS_CONFIG.PARTY_PATTERNS.some((pattern) => pattern.test(t));
     };
 
     const buildAbsoluteUrl = (relativeUrl: string): string => {
@@ -325,15 +362,62 @@ export class HouseOfCouncillorsScraper {
   }
 
   private validateMemberData(member: RawHouseOfCouncillorsMemberData): boolean {
-    return !!(
-      member?.name?.full &&
-      typeof member.name.full === 'string' &&
-      member.name.full.trim().length >= 2 &&
-      member.party &&
-      typeof member.party === 'string' &&
-      member.election &&
-      typeof member.election === 'string'
-    );
+    // Basic structure validation
+    if (!member || typeof member !== 'object') {
+      return false;
+    }
+
+    // Name validation
+    if (!member.name || typeof member.name !== 'object') {
+      return false;
+    }
+
+    const fullName = member.name.full;
+    if (!fullName || typeof fullName !== 'string') {
+      return false;
+    }
+
+    // Japanese names should be at least 2 characters and contain valid characters
+    const trimmedName = fullName.trim();
+    if (trimmedName.length < 2 || trimmedName.length > 20) {
+      return false;
+    }
+
+    // Check for basic Japanese character patterns (hiragana, katakana, kanji)
+    const japaneseNamePattern = /^[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF\u3400-\u4DBF\s　・]+$/;
+    if (!japaneseNamePattern.test(trimmedName)) {
+      return false;
+    }
+
+    // Party validation
+    if (!member.party || typeof member.party !== 'string') {
+      return false;
+    }
+
+    const trimmedParty = member.party.trim();
+    if (trimmedParty.length === 0 || trimmedParty.length > 50) {
+      return false;
+    }
+
+    // Election info validation
+    if (!member.election || typeof member.election !== 'string') {
+      return false;
+    }
+
+    const trimmedElection = member.election.trim();
+    if (trimmedElection.length === 0 || trimmedElection.length > 100) {
+      return false;
+    }
+
+    // Term expiration validation (optional but if present should be valid)
+    if (member.termExpiration && typeof member.termExpiration === 'string') {
+      const trimmedTerm = member.termExpiration.trim();
+      if (trimmedTerm.length > 50) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   private normalizeFurigana(furigana: string): string {
@@ -342,7 +426,7 @@ export class HouseOfCouncillorsScraper {
 
   private parseElectionInfo(rawInfo: string): {
     election: {
-      system: 'single-seat' | 'proportional-representation';
+      system: 'constituency' | 'proportional-representation';
       prefecture?: string;
       area?: string;
     };
@@ -350,7 +434,7 @@ export class HouseOfCouncillorsScraper {
     if (!rawInfo || rawInfo === '不明') {
       return {
         election: {
-          system: 'single-seat',
+          system: 'constituency',
           prefecture: '不明',
         },
       };
@@ -371,7 +455,7 @@ export class HouseOfCouncillorsScraper {
     if (matchedPrefecture) {
       return {
         election: {
-          system: 'single-seat',
+          system: 'constituency',
           prefecture: matchedPrefecture,
         },
       };
@@ -380,7 +464,7 @@ export class HouseOfCouncillorsScraper {
     // Default fallback
     return {
       election: {
-        system: 'single-seat',
+        system: 'constituency',
         prefecture: rawInfo,
       },
     };
@@ -410,7 +494,10 @@ export class HouseOfCouncillorsScraper {
 
     try {
       console.log(`Scraping profile: ${profileUrl}`);
-      await page.goto(profileUrl, { waitUntil: 'networkidle', timeout: 10000 });
+      await page.goto(profileUrl, {
+        waitUntil: 'networkidle',
+        timeout: HOUSE_OF_COUNCILLORS_CONFIG.TIMEOUTS.PROFILE_SCRAPE,
+      });
 
       const profile = await this.extractProfileFromPage(page);
       return profile;
@@ -649,7 +736,9 @@ export class HouseOfCouncillorsScraper {
       for (const keyword of keywords) {
         if (sentence.includes(keyword)) {
           // Extract the position title, handling Japanese text patterns
-          const match = sentence.match(new RegExp(`([^、，]*${keyword}[^、，]*)`));
+          // Escape special regex characters in keyword for safety
+          const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const match = sentence.match(new RegExp(`([^、，]*${escapedKeyword}[^、，]*)`));
           if (match?.[1]) {
             const position = match[1].trim();
             if (position && !positions.includes(position)) {

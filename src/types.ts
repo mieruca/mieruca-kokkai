@@ -5,7 +5,7 @@ export interface DietMember {
   profileUrl?: string;
   electionCount?: number | { house: number; senate?: number };
   election: {
-    system: 'single-seat' | 'proportional-representation';
+    system: 'single-seat' | 'constituency' | 'proportional-representation';
     prefecture?: string | undefined;
     number?: string | undefined;
     area?: string | undefined;

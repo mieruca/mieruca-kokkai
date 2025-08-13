@@ -1,14 +1,25 @@
 // Configuration constants for House of Councillors scraping
 export const HOUSE_OF_COUNCILLORS_CONFIG = {
   URLS: {
-    // Current session member list
-    CURRENT: 'https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/giin.htm',
+    // Current session member list - configurable for different sessions
+    CURRENT:
+      process.env.HOUSE_OF_COUNCILLORS_URL ||
+      'https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/giin.htm',
+    // Fallback URLs for common sessions
+    FALLBACK_URLS: [
+      'https://www.sangiin.go.jp/japanese/joho1/kousei/giin/218/giin.htm', // 218th session
+      'https://www.sangiin.go.jp/japanese/joho1/kousei/giin/217/giin.htm', // 217th session
+    ],
     BASE_URL: 'https://www.sangiin.go.jp',
   },
   TIMEOUTS: {
-    PAGE_LOAD: 5000,
+    PAGE_LOAD: Number(process.env.PAGE_LOAD_TIMEOUT) || 10000,
+    NAVIGATION: Number(process.env.NAVIGATION_TIMEOUT) || 15000,
+    PROFILE_SCRAPE: Number(process.env.PROFILE_SCRAPE_TIMEOUT) || 10000,
+    NETWORK_IDLE: Number(process.env.NETWORK_IDLE_TIMEOUT) || 5000,
   },
-  POLITICAL_PARTIES: [
+  // Known political parties - used for validation but not restrictive
+  KNOWN_POLITICAL_PARTIES: [
     '自民', // 自由民主党
     '立憲', // 立憲民主党
     '公明', // 公明党
@@ -20,9 +31,16 @@ export const HOUSE_OF_COUNCILLORS_CONFIG = {
     '無所属',
     '無会派',
   ],
+  // Patterns to identify valid party names (more flexible)
+  PARTY_PATTERNS: [
+    /[自立公維共民社][民主明新産主]/, // Major party patterns
+    /れ新/, // れいわ新選組
+    /無[所会][属派]/, // 無所属、無会派
+    /[会派]/, // General party/faction patterns
+  ],
   ELECTION_TYPES: {
     PROPORTIONAL: '比例',
-    SINGLE_SEAT: 'prefecture', // Will be matched by prefecture names
+    CONSTITUENCY: 'prefecture', // Prefecture-based constituencies for Upper House
   },
 } as const;
 

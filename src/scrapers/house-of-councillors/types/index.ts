@@ -4,7 +4,7 @@ export interface HouseOfCouncillorsMember {
   party: string;
   profileUrl?: string;
   election: {
-    system: 'single-seat' | 'proportional-representation';
+    system: 'constituency' | 'proportional-representation';
     prefecture?: string;
     area?: string;
   };
