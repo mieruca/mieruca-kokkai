@@ -9,6 +9,7 @@ dist/
 !package.json
 !tsconfig.json
 !playwright.config.ts
+!out/*.json
 .env
 .env.local
 test-results/
